@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class NewJFrame extends javax.swing.JFrame {
 
+    private String user, pass;
+    
    /**
      * Creates new form NewJFrame
      * @throws java.lang.ClassNotFoundException
@@ -23,10 +25,22 @@ public class NewJFrame extends javax.swing.JFrame {
      */
    public NewJFrame() throws ClassNotFoundException, SQLException {
        initComponents();
-       createTables("root", "root"); //replace with your mysql username and password
+       user = "root";
+       pass = "root";
+       createTables(user, pass); //replace with your mysql username and password
+       populate();
            
-       //DefaultTableModel dtm = execQuer2("root","root", "select * from product_t");
-       //EmloyeeTable.setModel(dtm);
+        try {
+            DefaultTableModel dtm = execQuer2(user,pass, "select * from employee;");
+            EmloyeeTable.setModel(dtm);
+            DefaultTableModel dtm2 = execQuer2(user,pass,"select * from material;");
+            ItemTable1.setModel(dtm2);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
        
     }
    
@@ -730,6 +744,54 @@ public class NewJFrame extends javax.swing.JFrame {
         
         return dtm;
         
+    }
+    
+    /**
+     * populate tables with fake info
+     */
+    private void populate() throws SQLException {
+        execQuer1(user,pass,"TRUNCATE TABLE employee");
+        //execQuer1(user,pass,"ALTER TABLE employee AUTO_INCREMENT = 10000;");
+        String quer1 = "insert into employee(employee_name, rate) values\n" +
+            "(\"Mang Jose\", 1.00),\n" +
+            "(\"Don Romantiko\", 5000.00),\n" +
+            "(\"Hari ng Sablay\", 3000.00);";
+        execQuer1(user,pass,quer1);
+        
+        execQuer1(user,pass,"TRUNCATE TABLE payroll");
+        String quer2 = "insert into payroll(payroll_id, employee_id, project_id, rate, working_hours, amount) values\n" +
+            "(000001, 000001, 000001, 1000.00, 8, 8000.00),\n" +
+            "(000002, 000002, 000002, 1000.00, 6, 6000.00),\n" +
+            "(000003, 000003, 000003, 2000.00, 5, 10000.00);";
+        execQuer1(user,pass,quer2);
+        
+        execQuer1(user,pass,"TRUNCATE TABLE purchase_order");
+        String quer3 = "insert into purchase_order(po_id, project_id, date_issued, total_price) values\n" +
+            "(000001, 000002, \"2014-05-21\", 50000.00),\n" +
+            "(000002, 000003, \"2008-01-06\", 10.00),\n" +
+            "(000003, 000001, \"2010-12-01\", 60000.50);";
+        execQuer1(user,pass,quer3);
+        
+        execQuer1(user,pass,"TRUNCATE TABLE project");
+        String quer4 = "insert into project(project_id, project_name, start_date, end_date, client) values\n" +
+            "(000004, \"JM's New Dorm\", \"2011-01-01\", \"2012-01-01\", \"Captain Board Shorts\"),\n" +
+            "(000002, \"Pia's New Dancing Place Whatever\", \"2014-08-09\", \"2015-02-14\", \"Captain Board Shorts\"),\n" +
+            "(000003, \"Javy's Old Drum Place Thingy\", \"2008-01-05\", \"2010-12-12\", \"Lolo mo\");";
+        execQuer1(user,pass,quer4);
+        
+        execQuer1(user,pass,"TRUNCATE TABLE supplier");
+        String quer5 = "insert into supplier(supplier_id, supplier_name, category) values\n" +
+            "(000001,\"Captain Board Shorts' Supplies!\", \"Board Shorts Stuff\"),\n" +
+            "(000002,\"Gamit ng Lolo mo\", \"Things\"),\n" +
+            "(000003, \"McAfee's Metal Materials\", \"Metal\");";
+        execQuer1(user,pass,quer5);
+        
+        execQuer1(user,pass,"TRUNCATE TABLE material");
+        String quer6 = "insert into material(material_id, material_name, quantity, in_warehouse, price) values\n" +
+            "(002000, \"Board Shorts\", 50, True, 100000.00),\n" +
+            "(002001, \"Antique Glass\", 20, True, 5000.00),\n" +
+            "(002002, \"Metal Plastic Bag\", 30, True, 20.00);";
+        execQuer1(user,pass,quer6);
     }
     
     private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) {                                            
