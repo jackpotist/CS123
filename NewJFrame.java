@@ -17,7 +17,8 @@ import javax.swing.table.DefaultTableModel;
  * @author JoshuaZambales
  */
 public class NewJFrame extends javax.swing.JFrame {
-	private String user, pass, currProj;
+	private String user, pass, proj1, proj2;
+        private boolean tab1, tab2;
    /**
      * Creates new form NewJFrame
      * @throws java.lang.ClassNotFoundException
@@ -27,17 +28,40 @@ public class NewJFrame extends javax.swing.JFrame {
 //replace with your mysql username and password
        user = "root";
        pass = "root";
+       tab1 = false;
+       tab2 = false;
        createTables(user, pass); 
        populate();
            
         try {
-            DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, mon, tues, wed, thurs, fri from employee, payroll where employee.employee_id=payroll.employee_id;");
+            /*
+            DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
+            "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+            "from payroll left join employee\n" +
+            "on employee.employee_id = payroll.employee_id\n" +
+            "group by employee.employee_id;");
             PayrollTable1.setModel(dtm);
+            
             DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name, quantity,\n"+
-                    "case when in_warehouse=1 then 'Yes' else 'No' \n" +
-                    "end as 'In Warehouse?'\n " +
-                    "from material;");
+            "case when in_warehouse=1 then 'Yes' else 'No' \n" +
+            "end as 'In Warehouse?'\n " +
+            "from material;");
             MaterialTable1.setModel(dtm2);
+            //ItemTable2.setModel(dtm2);
+            */
+            DefaultTableModel dtm3 = execQuer2(user,pass,"select project_name, date_issued, total_price\n" +
+            "from project left join purchase_order\n" +
+            "on project.project_id = purchase_order.project_id;");
+            POTable.setModel(dtm3);
+            
+            DefaultTableModel dtm4 = execQuer2(user,pass,"select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT \n" +
+            "from employee left join payroll on employee.employee_id = payroll.employee_id\n" +
+            "left join project on project.project_id = payroll.project_id\n" +
+            "group by employee_name\n" +
+            "order by employee.employee_id asc;");
+            EmployeesTable.setModel(dtm4);
+            
+            
         } catch (InstantiationException ex) {
             Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -147,7 +171,11 @@ public class NewJFrame extends javax.swing.JFrame {
         LoadProject.setText("Load Project");
         LoadProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LoadProjectActionPerformed(evt);
+                try {
+                    LoadProjectActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -732,35 +760,37 @@ public class NewJFrame extends javax.swing.JFrame {
 "		project_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		project_name Varchar(60) not null,\n" +
 "		start_date Date not null,\n" +
-"		end_date Date not null,\n" +
+"		end_date Date not null,\n" + //this should be default null ?? or kailangan talaga may estimate period for each project
 "		client Varchar(50) not null\n" +
 "		);";
-        String quer3 = "create table employee(\n" +
+        String quer3 = "create table IF NOT EXISTS employee(\n" +
 "		employee_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		employee_name Varchar(60) not null,\n" +
 "		rate DOUBLE(10,2) not null\n" +
 "		);";
-        String quer4 = "create table purchase_order(\n" +
+        String quer4 = "create table IF NOT EXISTS purchase_order(\n" +
 "		po_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		project_id Integer(6) not null,\n" +
 "		date_issued Date not null,\n" +
 "		total_price Double(10,2) not null,\n" +
-"		Foreign key (project_id) references project(project_id) on delete restrict\n" +
+"		Foreign key (project_id) references project(project_id) on delete cascade on update restrict\n" +
 "		);";
         
-        String quer5 = "create table supplier(\n" +
+        String quer5 = "create table IF NOT EXISTS supplier(\n" +
 "		supplier_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		supplier_name Varchar(60) not null,\n" +
 "		category Varchar(50) not null\n" +
 "		);";
-        String quer6 = "create table material(\n" +
+        String quer6 = "create table IF NOT EXISTS material(\n" +
 "		material_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
+"		supplier_id Integer(6) not null,\n" +
 "		material_name Varchar(50) not null,\n" +
 "		quantity Integer(5) not null,\n" +
 "		in_warehouse Boolean not null,\n" +
-"		price Double(10,2) not null\n" +
+"		price Double(10,2) not null,\n" +
+"		foreign key (supplier_id) references supplier(supplier_id) on delete cascade on update restrict\n" +
 "		);";
-        String quer7 = "	create table payroll(\n" +
+        String quer7 = "create table IF NOT EXISTS payroll(\n" +
 "		payroll_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		employee_id Integer(6) not null,\n" +
 "		project_id Integer(6) not null,\n" +
@@ -769,8 +799,8 @@ public class NewJFrame extends javax.swing.JFrame {
 "		wed Integer(2),\n" +
 "		thurs Integer(2),\n" +
 "		fri Integer(2),\n" +
-"		Foreign key (employee_id) references employee(employee_id) on delete restrict,\n" +
-"		Foreign key (project_id) references project(project_id) on delete restrict\n" +
+"		Foreign key (employee_id) references employee(employee_id) on delete cascade on update restrict,\n" +
+"		Foreign key (project_id) references project(project_id) on delete cascade on update restrict\n" +
 "		);";
            
        try {
@@ -866,55 +896,125 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void populate() throws SQLException {
         String quer1 = "insert into project(project_name, start_date, end_date, client) values\n" +
-"(\"JM's New Dorm\", \"2011-01-01\", \"2012-01-01\", \"Captain Board Shorts\"),\n" +
-"(\"Pia's New Dancing Place Whatever\", \"2014-08-09\", \"2015-02-14\", \"Captain Board Shorts\"),\n" +
-"(\"Javy's Old Drum Place Thingy\", \"2008-01-05\",\" 2010-12-12\", \"Lolo mo\"),\n" +
-"(\"Pet House\", \"2013-12-01\", \"2014-12-01\", \"Captain Board Shorts\");";
+            "(\"JM's New Dorm\", \"2011-01-01\", \"2012-01-01\", \"Captain Board Shorts\"),\n" +
+            "(\"Pia's New Dancing Place Whatever\", \"2014-08-09\", \"2015-02-14\", \"Captain Board Shorts\"),\n" +
+            "(\"Javy's Old Drum Place Thingy\", \"2008-01-05\",\" 2010-12-12\", \"Lolo mo\"),\n" +
+            "(\"Pet House\", \"2013-12-01\", \"2014-12-01\", \"Captain Board Shorts\"),"
+                + "(\"McDo Caribbean\", \"2014-10-11\", \"2014-10-15\", \"McDo\"),\n" +
+            "(\"Araneta Park\", \"2013-12-12\", \"2014-04-14\", \"Smart\"),\n" +
+            "(\"London Bridge in Paranaque\", \"2012-12-21\", \"2013-12-21\", \"Annabelle\");";
         execQuer1(user,pass,quer1);
         
         String quer2 = "insert into employee(employee_name, rate) values\n" +
-"(\"Mang Jose\", 1.00),\n" +
-"(\"Don Romantiko\", 5000.00),\n" +
-"(\"Hari ng Sablay\", 3000.00),\n" +
-"(\"Marco Francisco DeMargue\", 200.00),\n" +
-"(\"FishNChips\", 100.00);";
+            "(\"Mang Jose\", 1.00),\n" +
+            "(\"Don Romantiko\", 5000.00),\n" +
+            "(\"Hari ng Sablay\", 3000.00),\n" +
+            "(\"Marco Francisco DeMargue\", 200.00),\n" +
+            "(\"FishNChips\", 100.00),"
+            + "(\"Michael Jordan\", 1005.00),\n" +
+            "(\"George Washing\", 600.50);";
         execQuer1(user,pass,quer2);
         
         String quer3 = "insert into supplier(supplier_name, category) values\n" +
-"(\"Captain Board Shorts' Supplies!\", \"Board Shorts Stuff\"),\n" +
-"(\"Gamit ng Lolo mo\", \"Things\"),\n" +
-"(\"McAfee's Metal Materials\", \"Metal\"),\n" +
-"(\"Lolo's Pake\", \"Pake\"),\n" +
-"(\"Karinderya\", \"Food Stuff\");";
+            "(\"Captain Board Shorts' Supplies!\", \"Board Shorts Stuff\"),\n" +
+            "(\"Gamit ng Lolo mo\", \"Things\"),\n" +
+            "(\"McAfee's Metal Materials\", \"Metal\"),\n" +
+            "(\"Lolo's Pake\", \"Pake\"),\n" +
+            "(\"Karinderya\", \"Food Stuff\");";
         execQuer1(user,pass,quer3);
         
         String quer4 = "insert into payroll(employee_id, project_id) VALUES\n" +
             "((SELECT employee_id from employee where employee_id=1), (SELECT project_id from project where project_id=1) ),\n" +
             "((SELECT employee_id from employee where employee_id=2), (SELECT project_id from project where project_id=2) ),\n" +
             "((SELECT employee_id from employee where employee_id=3), (SELECT project_id from project where project_id=3) ),\n" + 
-            "((SELECT employee_id from employee where employee_id=4), (SELECT project_id from project where project_id=4) );";
-            //"((SELECT employee_id from employee where employee_id=5), (SELECT project_id from project where project_id=5) );";
+            "((SELECT employee_id from employee where employee_id=4), (SELECT project_id from project where project_id=4) ),\n" +
+            "((SELECT employee_id from employee where employee_id=5), (SELECT project_id from project where project_id=4) ),\n" +
+            "((SELECT employee_id from employee where employee_id=5), (SELECT project_id from project where project_id=1) ),\n" +
+            "((SELECT employee_id from employee where employee_id=6), (SELECT project_id from project where project_id=5) ),\n" +
+            "((SELECT employee_id from employee where employee_id=7), (SELECT project_id from project where project_id=7) ),\n" +
+            "((SELECT employee_id from employee where employee_id=1), (SELECT project_id from project where project_id=6) );";
         execQuer1(user,pass,quer4);
         
         execQuer1(user,pass,"ALTER TABLE material AUTO_INCREMENT = 002000;");
-        String quer5 = "insert into material(material_name, quantity, in_warehouse, price) values\n" +
-"(\"Board Shorts\", 50, True, 100000.00),\n" +
-"(\"Antique Glass\", 20, True, 5000.00),\n" +
-"(\"Metal Plastic Bag\", 30, True, 20.00),\n" +
-"(\"Pake\", 0, False, 0.99),\n" +
-"(\"Fish Bones\",10, True, 15.00);";
+        String quer5 = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values\n" +
+            "(1,\"Board Shorts\", 50, True, 100000.00),\n" +
+            "(2,\"Antique Glass\", 20, True, 5000.00),\n" +
+            "(3,\"Metal Plastic Bag\", 30, True, 20.00),\n" +
+            "(4,\"Pake\", 0, False, 0.99),\n" +
+            "(5,\"Fish Bones\",10, True, 15.00),\n" +
+            "(5, \"Chicarong Bakal\", 50, True, 55.99),\n" +
+            "(1, \"Trunks\", 20, True, 500.00);";
         execQuer1(user,pass,quer5);
         
         String quer6 = "insert into purchase_order(date_issued, total_price, project_id) VALUES\n" +
-            "(\"2010-12-01\", 60000.50, (SELECT project_id from project where project_id=1) ),\n" +
+            "(\"2011-01-01\", 60000.50, (SELECT project_id from project where project_id=1) ),\n" +
             "(\"2014-05-21\", 50000.00, (SELECT project_id from project where project_id=2) ),\n" +
             "(\"2008-01-06\", 10.00, (SELECT project_id from project where project_id=3) ),\n" +
-            "(\"2013-12-02\", 600.00, (SELECT project_id from project where project_id=4) );";
+            "(\"2013-12-02\", 600.00, (SELECT project_id from project where project_id=4) ),\n" +
+            "(\"2013-12-20\", 500000.00, (SELECT project_id from project where project_id=5) );";
         execQuer1(user,pass,quer6);
     }
+    
+    private void initTab1(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
+        Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Statement stm = connect(user,pass);
+        ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
+        rs.next();
+        int projid = rs.getInt(1);
+        System.out.println(projid);
+        
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
+        "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        "from payroll left join employee\n" +
+        "on employee.employee_id = payroll.employee_id\n" +
+        "where payroll.project_id="+projid+"\n" +
+        "group by employee.employee_id;");
+        PayrollTable1.setModel(dtm);
 
-  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
+        DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name, quantity,\n"+
+        "case when in_warehouse=1 then 'Yes' else 'No' \n" +
+        "end as 'In Warehouse?'\n " +
+        "from material;");
+        MaterialTable1.setModel(dtm2);
+    }
+    
+    private void initTab2(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
+        //Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Statement stm = connect(user,pass);
+        ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
+        rs.next();
+        int projid = rs.getInt(1);
+        System.out.println(projid);
+        
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
+        "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        "from payroll left join employee\n" +
+        "on employee.employee_id = payroll.employee_id\n" +
+        "where payroll.project_id="+projid+"\n" +
+        "group by employee.employee_id;");
+        PayrollTable2.setModel(dtm);
+
+        DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name, quantity,\n"+
+        "case when in_warehouse=1 then 'Yes' else 'No' \n" +
+        "end as 'In Warehouse?'\n " +
+        "from material;");
+        ItemTable2.setModel(dtm2);
+    }
+
+  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                                            
+      
+      //temporary
+      proj1 = "JM's New Dorm";
+      proj2 = "Pet House";
+      
+      tab1 = true;
+      tab2 = true;
+            try {
+                initTab1(proj1);
+                initTab2(proj2);
+            } catch (    InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }                                           
 
     private void Tab1KeyPressed(java.awt.event.KeyEvent evt) {                                
@@ -922,15 +1022,19 @@ public class NewJFrame extends javax.swing.JFrame {
     }                               
 
     private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+        
+        //remove material button in tab/project 1
+        System.out.println("in 1");
     }                                               
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
+        //tab or project 1
         JTextField m_id = new JTextField();
         JTextField m_name = new JTextField();
         JTextField qty = new JTextField();
         JTextField i_ware = new JTextField();
         
+        //fix the fields that need to be in the pop-up window
         Object[] fields = {
             "Material ID", m_id,
             "Material Name", m_name,
@@ -947,42 +1051,48 @@ public class NewJFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName, "Your Results", JOptionPane.PLAIN_MESSAGE); 
         
         //INSERTING TO TABLE
-        String query = "insert into material(material_name, quantity, in_warehouse, price) values \n" + 
-                "(\"" + materialName + "\", " + quantity + ", True, 20.00);";
+        String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" + 
+                "(2, \"" + materialName + "\", " + quantity + ", True, 20.00);";
         execQuer1(user, pass, query);
         
         //REFRESHING THE GUI
-        DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name as 'Material', quantity as 'Quantity',\n" +
+        DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name as 'Material', quantity as 'Quantity', \n" +
                 "case when in_warehouse=1 then 'Yes' else 'No'\n" +
                 "end as 'In Warehouse?'\n" +
                 "from material;");
         MaterialTable1.setModel(dtm2);    
         
-        //System.out.print("HERE!");
+        
     }                                            
 
     private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
+        // tab or project 2
+        System.out.println("in 2");
     }                                           
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        System.out.println("lol");
+        System.out.println("in 2");
     }                                        
 
     private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        System.out.println("lol");        // TODO add your handling code here:
+        System.out.println("in 2");        // TODO add your handling code here:
+        //this is the Add Employee button of Project 2 tab
     }                                            
 
     private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+        // Project 1
+        System.out.println("in 1");
     }                                               
 
     private void AddtoEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
+        // this is the Add Employee button in the Employees tab
+        System.out.println("hire employee!");
     }                                             
 
     private void RemoveToEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
+        // Employees Tab
+        System.out.println("pink slip");
     }                                                
 
     private void UpdateInventoryActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -998,11 +1108,13 @@ public class NewJFrame extends javax.swing.JFrame {
     }                                           
 
     private void RemoveEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+        //project 2 tab
+        System.out.println("in 2");
     }                                               
 
     private void AddEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
+        //this is the Add Employee button in Project1 tab
+        System.out.println("in 1");
     }                                            
 
     private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {                                              
