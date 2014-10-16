@@ -48,6 +48,8 @@ create database jcarl;
 		wed Integer(2),
 		thurs Integer(2),
 		fri Integer(2),
+		sat Integer(2),
+		sun Integer(2),
 		Foreign key (employee_id) references employee(employee_id) on delete cascade on update restrict,
 		Foreign key (project_id) references project(project_id) on delete cascade on update restrict
 		);
