@@ -372,7 +372,17 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveMaterial1.setText("Remove");
         RemoveMaterial1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveMaterial1ActionPerformed(evt);
+                try {
+                    RemoveMaterial1ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -737,7 +747,19 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveItem2.setText("Remove");
         RemoveItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveItem2ActionPerformed(evt);
+                try {
+                    try {
+                        RemoveItem2ActionPerformed(evt);
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1726,10 +1748,11 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 //DELETE NECESSARY ROWS
                 for (int i = 0; i < toDelete.length; i++)
                    ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);
+                initTab1(proj1);
                 }
            } catch (MySQLSyntaxErrorException lel) {}
        }
-    }                                                       
+    }                               
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
         Object[] options = {"Current Suppliers", "Warehouse"};
@@ -1860,7 +1883,8 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
         }
     }                                            
 
-    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException{                                   if (ItemTable2.getSelectedRow() == -1){
+    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException{                                   
+        if (ItemTable2.getSelectedRow() == -1){
            JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
        }
        else{
@@ -1890,10 +1914,11 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 //DELETE NECESSARY ROWS
                 for (int i = 0; i < toDelete.length; i++)
                    ((DefaultTableModel)ItemTable2.getModel()).removeRow(toDelete[i]);
+                initTab2(proj2);
                 }
            } catch (MySQLSyntaxErrorException lel) {}
        }
-    }                                                  
+    }                                 
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
         Object[] options = {"Current Suppliers", "Warehouse"};
