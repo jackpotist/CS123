@@ -15,7 +15,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,7 +27,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class NewJFrame extends javax.swing.JFrame {
 	private String user, pass, proj1, proj2;
-        //private boolean tab1, tab2;
    /**
      * Creates new form NewJFrame
      * @throws java.lang.ClassNotFoundException
@@ -34,8 +36,7 @@ public class NewJFrame extends javax.swing.JFrame {
 //replace with your mysql username and password
        user = "root";
        pass = "root";
-       //tab1 = false;
-       //tab2 = false;
+       
        createTables(user, pass); 
        //populate();
            
@@ -228,7 +229,11 @@ public class NewJFrame extends javax.swing.JFrame {
         CreateProject.setText("Create Project");
         CreateProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CreateProjectActionPerformed(evt);
+                try {
+                    CreateProjectActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -2081,32 +2086,176 @@ public class NewJFrame extends javax.swing.JFrame {
           }
     }                                            
 
-    private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {     
-
-        JPanel panel = new JPanel( new GridLayout(2, 2) );
+    private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        String[] monthStrings = {"January", "February","March", "April",
+                                 "May", "June","July", "August",
+                                 "September", "October","November", "December"};
+        JComboBox<String> month1 = new JComboBox<>(monthStrings);
+        JComboBox<String> month2 = new JComboBox<>(monthStrings);
+        
+        ArrayList<String> day = new ArrayList<>();
+        for (int i=1; i < 32; i++){
+            day.add(i+"");
+        }
+        String[] days = new String[day.size()];
+        day.toArray(days);
+        JComboBox<String> day1 = new JComboBox<>(days);
+        JComboBox<String> day2 = new JComboBox<>(days);
+        
+        SpinnerModel year = new SpinnerNumberModel(2014, 1900, 4000, 1);
+        JSpinner yrspin1 = new JSpinner(year);
+        SpinnerModel year1 = new SpinnerNumberModel(2014, 1900, 4000, 1);
+        JSpinner yrspin2 = new JSpinner(year1);
+        
+        JLabel start = new JLabel("Start date: ");
+        JLabel end = new JLabel("End date: ");
+        
+        JPanel datepanel = new JPanel(new GridLayout(1,4));
+        datepanel.add(start);
+        datepanel.add(month1);
+        datepanel.add(day1);
+        datepanel.add(yrspin1);
+        JPanel datepanel1 = new JPanel(new GridLayout(1,4));
+        datepanel1.add(end);
+        datepanel1.add(month2);
+        datepanel1.add(day2);
+        datepanel1.add(yrspin2);
+        
+        JPanel panel = new JPanel( new GridLayout(7, 1) );
         
         panel.add( new JLabel("Name of Project:") );
-        JTextField firstName = new JTextField(10);
-        panel.add( firstName );
+        JTextField name = new JTextField(10);
+        panel.add( name );
         
         panel.add( new JLabel("Client: ") );
-        JTextField lastName = new JTextField(10);
-        panel.add( lastName );
+        JTextField cli = new JTextField(10);
+        panel.add( cli );
         
-        JTextField name = new JTextField();
-        JTextField cli = new JTextField();
-
-        Object[] fields = {
-            "Name of Project", name,
-            "Client", cli
-        };
+        panel.add(datepanel);
+        panel.add(datepanel1);
 
         Object[] options1 = {"Ok", "Cancel"};
 
         int c = JOptionPane.showOptionDialog(null, panel, "Create New Project", 
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+            JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
             null, options1, options1[0]);
         
+        try {
+            if (c == JOptionPane.OK_OPTION){
+                String projname = name.getText();
+                String client = cli.getText();
+                String mon1 = (String)month1.getSelectedItem();
+                String mon2 = (String)month2.getSelectedItem();
+                String d1 = (String)day1.getSelectedItem();
+                String d2 = (String)day2.getSelectedItem();
+                String y1 = yrspin1.getValue().toString();
+                String y2 = yrspin2.getValue().toString();
+
+                if (Integer.parseInt(d1) < 10) {
+                    d1 = "0"+d1;
+                }
+                if (Integer.parseInt(d2) < 10) {
+                    d2 = "0"+d2;
+                }
+
+
+                switch (mon1.toLowerCase()) {
+                case "january":
+                    mon1 = "01";
+                    break;
+                case "february":
+                    mon1 = "02";
+                    break;
+                case "march":
+                    mon1 = "03";
+                    break;
+                case "april":
+                    mon1 = "04";
+                    break;
+                case "may":
+                    mon1 = "05";
+                    break;
+                case "june":
+                    mon1 = "06";
+                    break;
+                case "july":
+                    mon1 = "07";
+                    break;
+                case "august":
+                    mon1 = "08";
+                    break;
+                case "september":
+                    mon1 = "09";
+                    break;
+                case "october":
+                    mon1 = "10";
+                    break;
+                case "november":
+                    mon1 = "11";
+                    break;
+                case "december":
+                    mon1 = "12";
+                    break;
+                default: 
+                    mon1 = "00";
+                    break;
+            }
+
+                switch (mon2.toLowerCase()) {
+                case "january":
+                    mon2 = "01";
+                    break;
+                case "february":
+                    mon2 = "02";
+                    break;
+                case "march":
+                    mon2 = "03";
+                    break;
+                case "april":
+                    mon2 = "04";
+                    break;
+                case "may":
+                    mon2 = "05";
+                    break;
+                case "june":
+                    mon2 = "06";
+                    break;
+                case "july":
+                    mon2 = "07";
+                    break;
+                case "august":
+                    mon2 = "08";
+                    break;
+                case "september":
+                    mon2 = "09";
+                    break;
+                case "october":
+                    mon2 = "10";
+                    break;
+                case "november":
+                    mon2 = "11";
+                    break;
+                case "december":
+                    mon2 = "12";
+                    break;
+                default: 
+                    mon2 = "00";
+                    break;
+            }
+
+                String startd = y1+"-"+mon1+"-"+d1;
+                String endd = y2+"-"+mon2+"-"+d2;
+                System.out.println(projname+" "+startd+" "+endd+" "+client);
+
+                String query2 = "insert into project(project_name, start_date, end_date, client) "
+                        + "values (\""+projname+"\", \""+startd+"\", \""+endd+"\", \"" +client+ "\");";
+                execQuer1(user, pass, query2);
+
+                JOptionPane.showMessageDialog( null, "New project: "+projname+"\nClient: " +  client + "\nStart date: " + startd + "\nEnd date: " + endd, "Your Results", JOptionPane.PLAIN_MESSAGE); 
+             } 
+        } catch (MySQLSyntaxErrorException lel){
+                JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); 
+        }
     }                                             
 
     private void WarehouseTableMouseClicked(java.awt.event.MouseEvent evt) {                                            
