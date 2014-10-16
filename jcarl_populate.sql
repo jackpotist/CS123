@@ -13,12 +13,16 @@ insert into purchase_order(project_id, date_issued, total_price) values
 (000004, "2013-12-02", 600.00),
 (000005, "2013-12-20", 500000.00);
 insert into supplier(supplier_name, category) values
+<<<<<<< HEAD
 ("Warehouse","Current Stocks"),
+=======
+>>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
 ("Captain Board Shorts' Supplies!", "Board Shorts Stuff"),
 ("Gamit ng Lolo mo", "Things"),
 ("McAfee's Metal Materials", "Metal"),
 ("Lolo's Pake", "Pake"),
 ("Karinderya", "Food Stuff");
+<<<<<<< HEAD
 insert into material(supplier_id,material_name, quantity, price) values
 (2,"Board Shorts", 50, 10000.00), 
 (3,"Antique Glass", 20, 5000.00),
@@ -30,6 +34,16 @@ insert into material(supplier_id,material_name, quantity, price) values
 (1, "Sound System", 2, 50000.00),
 (1, "Metal Plates", 5, 4000.00),
 (1, "Cabinet", 10, 3000.00);
+=======
+insert into material(supplier_id,material_name, quantity, in_warehouse, price) values
+(1,"Board Shorts", 50, True, 100000.00),
+(2,"Antique Glass", 20, True, 5000.00),
+(3,"Metal Plastic Bag", 30, True, 20.00),
+(4,"Pake", 0, False, 0.99),
+(5,"Fish Bones",10, True, 15.00),
+(5, "Chicarong Bakal", 50, True, 55.99),
+(1, "Trunks", 20, True, 500.00);
+>>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
 insert into employee(employee_name, rate) values
 ("Mang Jose", 1.00),
 ("Don Romantiko", 5000.00),
@@ -49,6 +63,7 @@ insert into payroll(employee_id, project_id) values
 (6,5),
 (7,7),
 (1,6),
+<<<<<<< HEAD
 (8,2);
 insert into for_use(project_id, material_id, quantity) values
 (1,2,5),
@@ -59,3 +74,6 @@ insert into for_use(project_id, material_id, quantity) values
 (4,4,2),
 (4,7,1),
 (7,2,1);
+=======
+(8,2);
+>>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
