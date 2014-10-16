@@ -11,14 +11,10 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -297,7 +293,17 @@ public class NewJFrame extends javax.swing.JFrame {
         AddEmployee1.setText("Add Employee");
         AddEmployee1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddEmployee1ActionPerformed(evt);
+                try {
+                    AddEmployee1ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -663,7 +669,17 @@ public class NewJFrame extends javax.swing.JFrame {
         AddEmployee2.setText("Add Employee");
         AddEmployee2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddEmployee2ActionPerformed(evt);
+                try {
+                    AddEmployee2ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1680,7 +1696,6 @@ public class NewJFrame extends javax.swing.JFrame {
     }                                               
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        
         Object[] options = {"Current Suppliers", "Warehouse"};
         
         int n = JOptionPane.showOptionDialog(null, "Add Material from", "Add Material", 
@@ -1752,7 +1767,7 @@ public class NewJFrame extends javax.swing.JFrame {
         }    else if (n == JOptionPane.NO_OPTION) {
             
             Statement stm = connect(user,pass);
-            ResultSet rs = stm.executeQuery("select material_name from material where supplier_id=1;");
+            ResultSet rs = stm.executeQuery("select ifnull(material_name, 'NO MATERIALS IN WAREHOUSE') from material where supplier_id=1;");
 
             ArrayList<String> temp1 = new ArrayList<>();
             while(rs.next()) {
@@ -1886,7 +1901,7 @@ public class NewJFrame extends javax.swing.JFrame {
         }    else if (n == JOptionPane.NO_OPTION) {
             
             Statement stm = connect(user,pass);
-            ResultSet rs = stm.executeQuery("select material_name from material where supplier_id=1;");
+            ResultSet rs = stm.executeQuery("select ifnull(material_name, 'NO MATERIALS IN WAREHOUSE') from material where supplier_id=1;");
 
             ArrayList<String> temp1 = new ArrayList<>();
             while(rs.next()) {
@@ -1943,9 +1958,49 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }                                        
 
-    private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        System.out.println("in 2");        // TODO add your handling code here:
+    private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
+        //System.out.println("in 2");        // TODO add your handling code here:
         //this is the Add Employee button of Project 2 tab
+        Statement stm = connect(user,pass);
+        ResultSet rs = stm.executeQuery("select ifnull(employee_name,'NO EMPLOYEES') from employee;");
+
+        ArrayList<String> temp = new ArrayList<>();
+        while(rs.next()) {
+            temp.add(rs.getString(1));
+        }
+        String[] employ = new String[temp.size()];
+        temp.toArray(employ);
+
+        final JComboBox<String> employlist = new JComboBox<>(employ);
+
+        Object[] fields = {"Choose Employee", employlist};
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields, 
+            "Add Employee to Project", JOptionPane.YES_NO_OPTION, 
+            JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+
+        if (n == JOptionPane.OK_OPTION){
+            String selemp = (String)employlist.getSelectedItem();
+
+            Statement state = connect(user,pass);
+
+            ResultSet rs2 = state.executeQuery("select employee_id from employee where employee_name=\""+selemp+"\";");
+            rs2.next();
+            int empid = rs2.getInt(1);
+
+            ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
+            rs3.next();
+            int projid = rs3.getInt(1);
+
+            String query2 = "insert into payroll(project_id, employee_id) values ("+projid+", "+empid+");";
+            execQuer1(user, pass, query2);
+            state.close();
+
+            //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+            initTab2(proj2);
+              
+          }
     }                                            
 
     private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1981,13 +2036,77 @@ public class NewJFrame extends javax.swing.JFrame {
         System.out.println("in 2");
     }                                               
 
-    private void AddEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void AddEmployee1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
         //this is the Add Employee button in Project1 tab
-        System.out.println("in 1");
+        //System.out.println("in 1");
+        Statement stm = connect(user,pass);
+        ResultSet rs = stm.executeQuery("select ifnull(employee_name,'NO EMPLOYEES') from employee;");
+
+        ArrayList<String> temp = new ArrayList<>();
+        while(rs.next()) {
+            temp.add(rs.getString(1));
+        }
+        String[] employ = new String[temp.size()];
+        temp.toArray(employ);
+
+        final JComboBox<String> employlist = new JComboBox<>(employ);
+
+        Object[] fields = {"Choose Employee", employlist};
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields, 
+            "Add Employee to Project", JOptionPane.YES_NO_OPTION, 
+            JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+
+        if (n == JOptionPane.OK_OPTION){
+            String selemp = (String)employlist.getSelectedItem();
+
+            Statement state = connect(user,pass);
+
+            ResultSet rs2 = state.executeQuery("select employee_id from employee where employee_name=\""+selemp+"\";");
+            rs2.next();
+            int empid = rs2.getInt(1);
+
+            ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
+            rs3.next();
+            int projid = rs3.getInt(1);
+
+            String query2 = "insert into payroll(project_id, employee_id) values ("+projid+", "+empid+");";
+            execQuer1(user, pass, query2);
+            state.close();
+
+            //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+            initTab1(proj1);
+              
+          }
     }                                            
 
-    private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO add your handling code here:
+    private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {     
+
+        JPanel panel = new JPanel( new GridLayout(2, 2) );
+        
+        panel.add( new JLabel("Name of Project:") );
+        JTextField firstName = new JTextField(10);
+        panel.add( firstName );
+        
+        panel.add( new JLabel("Client: ") );
+        JTextField lastName = new JTextField(10);
+        panel.add( lastName );
+        
+        JTextField name = new JTextField();
+        JTextField cli = new JTextField();
+
+        Object[] fields = {
+            "Name of Project", name,
+            "Client", cli
+        };
+
+        Object[] options1 = {"Ok", "Cancel"};
+
+        int c = JOptionPane.showOptionDialog(null, panel, "Create New Project", 
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+            null, options1, options1[0]);
+        
     }                                             
 
     private void WarehouseTableMouseClicked(java.awt.event.MouseEvent evt) {                                            
