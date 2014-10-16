@@ -1,3 +1,4 @@
+package JCarl;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.awt.GridLayout;
@@ -37,7 +38,7 @@ public class NewJFrame extends javax.swing.JFrame {
        //tab1 = false;
        //tab2 = false;
        createTables(user, pass); 
-       //populate();
+       populate();
            
         try {
             DefaultTableModel dtm3 = execQuer2(user,pass,"select project.project_name as PROJECT, \n" +
@@ -367,7 +368,17 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveMaterial1.setText("Remove");
         RemoveMaterial1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveMaterial1ActionPerformed(evt);
+                try {
+                    RemoveMaterial1ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -732,7 +743,11 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveItem2.setText("Remove");
         RemoveItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveItem2ActionPerformed(evt);
+                try {
+                    RemoveItem2ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1690,10 +1705,41 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:   
     }                               
 
-    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        //remove material button in tab/project 1
-        System.out.println("in 1");
-    }                                               
+    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {                               
+       if (MaterialTable1.getSelectedRow() == -1){
+           JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
+       else{
+           int[] toDelete = MaterialTable1.getSelectedRows();
+           String rows = new String();
+           for (int i = 0; i < toDelete.length; i++){
+               rows += "" + MaterialTable1.getValueAt(toDelete[i], 0).toString();
+               if (i < toDelete.length-1)
+                    rows += ", ";
+               if (i == toDelete.length)
+                    rows += "?";
+           }
+           Object question = "Are you sure you want to delete the following items: " + rows + "?";
+           Object[] options = {"Yes", "No"};
+           
+           int n = JOptionPane.showOptionDialog(null, question, "Remove Items", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+           try{
+                if (n == JOptionPane.OK_OPTION){
+                    String q = new String();
+                    q = rows.replace(", ", " OR ");
+                    q = rows.replace("?", "");
+                    String query = "DELETE FROM for_use WHERE material_name = \"" + rows + "\";";
+                    execQuer1(user, pass, query);
+
+                    rows.replace("?", "");
+                    JOptionPane.showMessageDialog(null, "The following materials have been deleted from the database:" + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
+                //DELETE NECESSARY ROWS
+                for (int i = 0; i < toDelete.length; i++)
+                   ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);
+                }
+           } catch (MySQLSyntaxErrorException lel) {}
+       }
+    }                                   
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
         Object[] options = {"Current Suppliers", "Warehouse"};
@@ -1824,9 +1870,39 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }                                            
 
-    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // tab or project 2
-        System.out.println("in 2");
+    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException{                                   if (ItemTable2.getSelectedRow() == -1){
+           JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
+       else{
+           int[] toDelete = ItemTable2.getSelectedRows();
+           String rows = new String();
+           for (int i = 0; i < toDelete.length; i++){
+               rows += "" + ItemTable2.getValueAt(toDelete[i], 0).toString();
+               if (i < toDelete.length-1)
+                    rows += ", ";
+               if (i == toDelete.length)
+                    rows += "?";
+           }
+           Object question = "Are you sure you want to delete the following items: " + rows + "?";
+           Object[] options = {"Yes", "No"};
+           
+           int n = JOptionPane.showOptionDialog(null, question, "Remove Items", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+           try{
+                if (n == JOptionPane.OK_OPTION){
+                    String q = new String();
+                    q = rows.replace(", ", " OR ");
+                    q = rows.replace("?", "");
+                    String query = "DELETE FROM material WHERE material_name = \"" + rows + "\";";
+                    execQuer1(user, pass, query);
+
+                    rows.replace("?", "");
+                    JOptionPane.showMessageDialog(null, "The following materials have been deleted from the database:" + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
+                //DELETE NECESSARY ROWS
+                for (int i = 0; i < toDelete.length; i++)
+                   ((DefaultTableModel)ItemTable2.getModel()).removeRow(toDelete[i]);
+                }
+           } catch (MySQLSyntaxErrorException lel) {}
+       }
     }                                           
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
