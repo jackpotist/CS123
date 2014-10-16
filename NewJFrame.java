@@ -1,13 +1,17 @@
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -31,24 +35,9 @@ public class NewJFrame extends javax.swing.JFrame {
        tab1 = false;
        tab2 = false;
        createTables(user, pass); 
-       populate();
+       //populate();
            
         try {
-            /*
-            DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
-            "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
-            "from payroll left join employee\n" +
-            "on employee.employee_id = payroll.employee_id\n" +
-            "group by employee.employee_id;");
-            PayrollTable1.setModel(dtm);
-            
-            DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name, quantity,\n"+
-            "case when in_warehouse=1 then 'Yes' else 'No' \n" +
-            "end as 'In Warehouse?'\n " +
-            "from material;");
-            MaterialTable1.setModel(dtm2);
-            //ItemTable2.setModel(dtm2);
-            */
             DefaultTableModel dtm3 = execQuer2(user,pass,"select project_name, date_issued, total_price\n" +
             "from project left join purchase_order\n" +
             "on project.project_id = purchase_order.project_id;");
@@ -756,7 +745,7 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void createTables(String user, String pass) {
         String quer1 = "CREATE DATABASE IF NOT EXISTS jcarl;";
-        String quer2 = "create table project(\n" +
+        String quer2 = "create table IF NOT EXISTS project(\n" +
 "		project_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		project_name Varchar(60) not null,\n" +
 "		start_date Date not null,\n" +
@@ -798,7 +787,9 @@ public class NewJFrame extends javax.swing.JFrame {
 "		tues Integer(2),\n" +
 "		wed Integer(2),\n" +
 "		thurs Integer(2),\n" +
-"		fri Integer(2),\n" +
+"		fri Integer(2),\n" + 
+"		sat Integer(2),\n" +
+"		sun Integer(2)," +
 "		Foreign key (employee_id) references employee(employee_id) on delete cascade on update restrict,\n" +
 "		Foreign key (project_id) references project(project_id) on delete cascade on update restrict\n" +
 "		);";
@@ -956,15 +947,32 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void initTab1(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Tab1.setTitleAt(0, proj);
+        
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
         int projid = rs.getInt(1);
-        System.out.println(projid);
+        //System.out.println(projid);
         
+        /*
         DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
         "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        "from payroll left join employee\n" +
+        "on employee.employee_id = payroll.employee_id\n" +
+        "where payroll.project_id="+projid+"\n" +
+        "group by employee.employee_id;");
+        PayrollTable1.setModel(dtm);
+        */
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
+        "ifnull(mon, 8) as MONDAY, \n" +
+        "ifnull(tues, 8) as TUESDAY, \n" +
+        "ifnull(wed,8) as WEDNESDAY, \n" +
+        "ifnull(thurs,8) as THURSDAY, \n" +
+        "ifnull(fri,7) as FRIDAY,\n" +
+        "ifnull(sat,7) as SATURDAY,\n" +
+        "ifnull(sun,7) as SUNDAY,\n" +
+        "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+projid+"\n" +
@@ -979,15 +987,22 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void initTab2(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        //Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Tab1.setTitleAt(1, proj);
+        
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
         int projid = rs.getInt(1);
-        System.out.println(projid);
         
-        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
-        "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
+        "ifnull(mon, 8) as MONDAY, \n" +
+        "ifnull(tues, 8) as TUESDAY, \n" +
+        "ifnull(wed,8) as WEDNESDAY, \n" +
+        "ifnull(thurs,8) as THURSDAY, \n" +
+        "ifnull(fri,7) as FRIDAY,\n" +
+        "ifnull(sat,7) as SATURDAY,\n" +
+        "ifnull(sun,7) as SUNDAY,\n" +
+        "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+projid+"\n" +
@@ -1001,66 +1016,98 @@ public class NewJFrame extends javax.swing.JFrame {
         ItemTable2.setModel(dtm2);
     }
 
-  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                                            
+  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException { 
+      Statement stm = connect(user,pass);
+      ResultSet rs = stm.executeQuery("select project_name from project;");
       
-      //temporary
-      proj1 = "JM's New Dorm";
-      proj2 = "Pet House";
+      ArrayList<String> projlist = new ArrayList<>();
+      while(rs.next()) {
+          projlist.add(rs.getString(1));
+      }
+      String[] projl = new String[projlist.size()];
+      projlist.toArray(projl);
       
-      tab1 = true;
-      tab2 = true;
+      final JComboBox<String> projl1 = new JComboBox<>(projl);
+      final JComboBox<String> projl2 = new JComboBox<>(projl);
+      
+      Object[] fields = {
+            "First Project: ", projl1,
+            "Second Project", projl2,
+        };
+      Object[] options = {"Ok", "Cancel"};
+        
+      int n = JOptionPane.showOptionDialog(null, fields, 
+              "Load Projects", JOptionPane.YES_NO_OPTION, 
+              JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+      
+      if (n == JOptionPane.OK_OPTION){
+          proj1 = (String) projl1.getSelectedItem();
+          proj2 = (String) projl2.getSelectedItem();
+
+          tab1 = true;
+          tab2 = true;
+          
             try {
                 initTab1(proj1);
                 initTab2(proj2);
             } catch (    InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
                 Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+      }
+      
     }                                           
 
     private void Tab1KeyPressed(java.awt.event.KeyEvent evt) {                                
         // TODO add your handling code here:   
     }                               
 
-    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        
+    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {
         //remove material button in tab/project 1
         System.out.println("in 1");
     }                                               
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
         //tab or project 1
-        JTextField m_id = new JTextField();
         JTextField m_name = new JTextField();
         JTextField qty = new JTextField();
+        JTextField cost = new JTextField();
         JTextField i_ware = new JTextField();
         
         //fix the fields that need to be in the pop-up window
         Object[] fields = {
-            "Material ID", m_id,
             "Material Name", m_name,
             "Quantity", qty,
+            "Price", cost,
             "In warehouse?", i_ware,
         };
         
-        JOptionPane.showConfirmDialog(null, fields, "Testing lang", JOptionPane.OK_CANCEL_OPTION);
+        Object[] options = {"Ok", "Cancel"};
         
-        String materialID = m_id.getText();
-        String materialName = m_name.getText();
-        String quantity = qty.getText();
-        String warehouse = i_ware.getText();
-        JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName, "Your Results", JOptionPane.PLAIN_MESSAGE); 
+        int n = JOptionPane.showOptionDialog(null, fields, "Add Material", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         
-        //INSERTING TO TABLE
-        String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" + 
-                "(2, \"" + materialName + "\", " + quantity + ", True, 20.00);";
-        execQuer1(user, pass, query);
-        
-        //REFRESHING THE GUI
-        DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name as 'Material', quantity as 'Quantity', \n" +
-                "case when in_warehouse=1 then 'Yes' else 'No'\n" +
-                "end as 'In Warehouse?'\n" +
-                "from material;");
-        MaterialTable1.setModel(dtm2);    
+        try{
+            if (n == JOptionPane.OK_OPTION){
+                String materialName = m_name.getText();
+                String quantity = qty.getText();
+                String price = cost.getText();
+                String warehouse = i_ware.getText();
+
+                String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" +  "(2, \"" + materialName + "\", " + quantity + ", True," + price + ");";
+                execQuer1(user, pass, query);
+
+                JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName + " costing " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            }
+            //REFRESHING THE GUI
+            DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name as 'Material', quantity as 'Quantity', \n" +
+                    "case when in_warehouse=1 then 'Yes' else 'No'\n" +
+                    "end as 'In Warehouse?'\n" +
+                    "from material;");
+            MaterialTable1.setModel(dtm2);
+        } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }   catch (  SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }    
         
         
     }                                            
@@ -1072,6 +1119,46 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         System.out.println("in 2");
+        JTextField m_name = new JTextField();
+        JTextField qty = new JTextField();
+        JTextField cost = new JTextField();
+        JTextField i_ware = new JTextField();
+        
+        //fix the fields that need to be in the pop-up window
+        Object[] fields = {
+            "Material Name", m_name,
+            "Quantity", qty,
+            "Price", cost,
+            "In warehouse?", i_ware,
+        };
+        
+        Object[] options = {"Ok", "Cancel"};
+        
+        int n = JOptionPane.showOptionDialog(null, fields, "Add Material", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        
+        try{
+            if (n == JOptionPane.OK_OPTION){
+                String materialName = m_name.getText();
+                String quantity = qty.getText();
+                String price = cost.getText();
+                String warehouse = i_ware.getText();
+
+                String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" +  "(2, \"" + materialName + "\", " + quantity + ", True," + price + ");";
+                execQuer1(user, pass, query);
+
+                JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName + " costing " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            }
+            //REFRESHING THE GUI
+            DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name as 'Material', quantity as 'Quantity', \n" +
+                    "case when in_warehouse=1 then 'Yes' else 'No'\n" +
+                    "end as 'In Warehouse?'\n" +
+                    "from material;");
+            ItemTable2.setModel(dtm2);
+        } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }   catch (  SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }                                        
 
     private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                             
