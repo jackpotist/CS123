@@ -1,4 +1,3 @@
-package JCarl;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.awt.GridLayout;
@@ -39,7 +38,7 @@ public class NewJFrame extends javax.swing.JFrame {
        pass = "root";
        
        createTables(user, pass); 
-       populate();
+       //populate();
            
         try {
             DefaultTableModel dtm3 = execQuer2(user,pass,"select project.project_name as PROJECT, \n" +
@@ -373,17 +372,7 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveMaterial1.setText("Remove");
         RemoveMaterial1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    RemoveMaterial1ActionPerformed(evt);
-                } catch (SQLException ex) {
-                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                RemoveMaterial1ActionPerformed(evt);
             }
         });
 
@@ -748,11 +737,7 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveItem2.setText("Remove");
         RemoveItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    RemoveItem2ActionPerformed(evt);
-                } catch (SQLException ex) {
-                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                RemoveItem2ActionPerformed(evt);
             }
         });
 
@@ -1710,7 +1695,7 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:   
     }                               
 
-    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {                               
+private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {                               
        if (MaterialTable1.getSelectedRow() == -1){
            JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
        }
@@ -1744,7 +1729,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
            } catch (MySQLSyntaxErrorException lel) {}
        }
-    }                                   
+    }                                                       
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
         Object[] options = {"Current Suppliers", "Warehouse"};
@@ -1908,7 +1893,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
            } catch (MySQLSyntaxErrorException lel) {}
        }
-    }                                           
+    }                                                  
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
         Object[] options = {"Current Suppliers", "Warehouse"};
