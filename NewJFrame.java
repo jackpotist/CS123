@@ -1,19 +1,21 @@
 package JCarl;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
-
 
 /**
  *MAKE QUERY A FUCKING PARAMETER
@@ -34,24 +36,9 @@ public class NewJFrame extends javax.swing.JFrame {
        tab1 = false;
        tab2 = false;
        createTables(user, pass); 
-       populate();
+       //populate();
            
         try {
-            /*
-            DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
-            "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
-            "from payroll left join employee\n" +
-            "on employee.employee_id = payroll.employee_id\n" +
-            "group by employee.employee_id;");
-            PayrollTable1.setModel(dtm);
-            
-            DefaultTableModel dtm2 = execQuer2(user,pass,"select material_name, quantity,\n"+
-            "case when in_warehouse=1 then 'Yes' else 'No' \n" +
-            "end as 'In Warehouse?'\n " +
-            "from material;");
-            MaterialTable1.setModel(dtm2);
-            //ItemTable2.setModel(dtm2);
-            */
             DefaultTableModel dtm3 = execQuer2(user,pass,"select project_name, date_issued, total_price\n" +
             "from project left join purchase_order\n" +
             "on project.project_id = purchase_order.project_id;");
@@ -108,6 +95,30 @@ public class NewJFrame extends javax.swing.JFrame {
         Week1 = new javax.swing.JTextField();
         Week1Button = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        mon_p3 = new javax.swing.JLabel();
+        tues_p3 = new javax.swing.JLabel();
+        wed_p3 = new javax.swing.JLabel();
+        thurs_p3 = new javax.swing.JLabel();
+        txtmon_p3 = new javax.swing.JTextField();
+        txttues_p3 = new javax.swing.JTextField();
+        txtwed_p3 = new javax.swing.JTextField();
+        txtthurs_p3 = new javax.swing.JTextField();
+        txtfri_p3 = new javax.swing.JTextField();
+        txtsat_p3 = new javax.swing.JTextField();
+        txtsun_p3 = new javax.swing.JTextField();
+        sun_p3 = new javax.swing.JLabel();
+        sat_p3 = new javax.swing.JLabel();
+        fri_p3 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        employee_rate_p3 = new javax.swing.JTextField();
+        update_employee_p3 = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        employee_name_p3 = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        material_name_p3 = new javax.swing.JTextField();
+        material_quantity_p3 = new javax.swing.JTextField();
+        edit_material_p3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         PayrollTable2 = new javax.swing.JTable();
@@ -122,23 +133,61 @@ public class NewJFrame extends javax.swing.JFrame {
         Week2 = new javax.swing.JTextField();
         Week2Button = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
+        mon_p2 = new javax.swing.JLabel();
+        tues_p2 = new javax.swing.JLabel();
+        wed_p2 = new javax.swing.JLabel();
+        thurs_p2 = new javax.swing.JLabel();
+        txtmon_p2 = new javax.swing.JTextField();
+        txttues_p2 = new javax.swing.JTextField();
+        txtwed_p2 = new javax.swing.JTextField();
+        txtthurs_p2 = new javax.swing.JTextField();
+        txtfri_p2 = new javax.swing.JTextField();
+        txtsat_p2 = new javax.swing.JTextField();
+        txtsun_p2 = new javax.swing.JTextField();
+        sun_p2 = new javax.swing.JLabel();
+        sat_p2 = new javax.swing.JLabel();
+        fri_p2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        material_name_p2 = new javax.swing.JTextField();
+        material_quantity_p2 = new javax.swing.JTextField();
+        edit_material_p2 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        employee_rate_p2 = new javax.swing.JTextField();
+        update_employee_p2 = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        employee_name_p2 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         AddtoEmployee = new javax.swing.JButton();
         RemoveToEmployee = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         EmployeesTable = new javax.swing.JTable();
+        Update_employee = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txt_employee_name = new javax.swing.JTextField();
+        txt_employee_project = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         WarehouseTable = new javax.swing.JTable();
         UpdateInventory = new javax.swing.JButton();
         AddWarehouse = new javax.swing.JButton();
         RemoveWarehouse = new javax.swing.JButton();
+        txt_employee_id = new javax.swing.JTextField();
+        txt_material_name = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         POTable = new javax.swing.JTable();
         ADDPO = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        REMOVEPO = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        UPDATEPO = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -182,27 +231,6 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(CreateProject)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(LoadProject)
-                .addContainerGap(611, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CreateProject)
-                    .addComponent(LoadProject))
-                .addContainerGap(52, Short.MAX_VALUE))
-        );
-
         Tab1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         Tab1.setToolTipText("");
         Tab1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -216,6 +244,11 @@ public class NewJFrame extends javax.swing.JFrame {
 
         EmployeScroll.setAutoscrolls(true);
         EmployeScroll.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        EmployeScroll.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EmployeScrollMouseClicked(evt);
+            }
+        });
 
         PayrollTable1.setAutoCreateRowSorter(true);
         PayrollTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -281,6 +314,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 "Name", "Quantity"
             }
         ));
+        MaterialTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MaterialTable1MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(MaterialTable1);
 
         EmployeeInfoLabel.setText("Employee Information");
@@ -292,7 +330,13 @@ public class NewJFrame extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     AddMaterial1ActionPerformed(evt);
-                } catch (        SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
                     Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -307,7 +351,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField1");
 
-        Week1Button.setText("jButton1");
+        Week1Button.setText("Go to week");
         Week1Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Week1ButtonActionPerformed(evt);
@@ -316,38 +360,152 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Week:");
 
+        mon_p3.setText("Mon:");
+
+        tues_p3.setText("Tues:");
+
+        wed_p3.setText("Wed:");
+
+        thurs_p3.setText("Thurs:");
+
+        txtmon_p3.setText("    ");
+        txtmon_p3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtmon_p3ActionPerformed(evt);
+            }
+        });
+
+        txttues_p3.setText("    ");
+
+        txtwed_p3.setText("    ");
+
+        txtthurs_p3.setText("    ");
+
+        txtfri_p3.setText("    ");
+
+        txtsat_p3.setText("    ");
+
+        txtsun_p3.setText("    ");
+
+        sun_p3.setText("Sun:");
+
+        sat_p3.setText("Sat:");
+
+        fri_p3.setText("Fri:");
+
+        jLabel14.setText("Rate:");
+
+        employee_rate_p3.setText("  ");
+
+        update_employee_p3.setText("Update Employee Payroll");
+        update_employee_p3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                update_employee_p3ActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("   Name:");
+
+        jLabel16.setText("Name:");
+
+        jLabel17.setText("Quantity:");
+
+        material_quantity_p3.setText("                ");
+
+        edit_material_p3.setText("Edit Material");
+        edit_material_p3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_material_p3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout Project2PanelLayout = new javax.swing.GroupLayout(Project2Panel);
         Project2Panel.setLayout(Project2PanelLayout);
         Project2PanelLayout.setHorizontalGroup(
             Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Project2PanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(21, 21, 21)
                 .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addGroup(Project2PanelLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createSequentialGroup()
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(Project2PanelLayout.createSequentialGroup()
-                                .addComponent(AddEmployee1)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(update_employee_p3)
+                                .addGap(17, 17, 17))
+                            .addGroup(Project2PanelLayout.createSequentialGroup()
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                                        .addComponent(AddEmployee1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(RemoveEmployee1)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(mon_p3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(tues_p3))
+                                            .addComponent(wed_p3))
+                                        .addComponent(thurs_p3))
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(25, 25, 25)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(employee_rate_p3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(employee_name_p3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtthurs_p3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                                            .addComponent(txtmon_p3, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txttues_p3, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtwed_p3, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(sun_p3)
+                                                .addComponent(fri_p3))
+                                            .addComponent(sat_p3))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtfri_p3, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                                            .addComponent(txtsat_p3)
+                                            .addComponent(txtsun_p3))))))
+                        .addGap(198, 198, 198))
+                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(Project2PanelLayout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(EmployeeInfoLabel)
+                                .addGap(163, 163, 163)
+                                .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(RemoveEmployee1))
+                                .addComponent(Week1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Week1Button))
+                            .addComponent(edit_material_p3)
+                            .addGroup(Project2PanelLayout.createSequentialGroup()
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel17))
+                                .addGap(18, 18, 18)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(material_quantity_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(material_name_p3, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(Project2PanelLayout.createSequentialGroup()
                                 .addComponent(AddMaterial1)
                                 .addGap(18, 18, 18)
-                                .addComponent(RemoveMaterial1))))
-                    .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, Project2PanelLayout.createSequentialGroup()
-                            .addGap(9, 9, 9)
-                            .addComponent(EmployeeInfoLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Week1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Week1Button))
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
-                        .addComponent(EmployeScroll, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(323, Short.MAX_VALUE))
+                                .addComponent(RemoveMaterial1)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(Project2PanelLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(EmployeScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(Project2PanelLayout.createSequentialGroup()
                     .addGap(364, 364, 364)
@@ -366,18 +524,72 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EmployeScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddEmployee1)
-                    .addComponent(RemoveEmployee1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addGap(4, 4, 4)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddMaterial1)
-                    .addComponent(RemoveMaterial1))
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddEmployee1)
+                            .addComponent(RemoveEmployee1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(Project2PanelLayout.createSequentialGroup()
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(mon_p3)
+                                    .addComponent(txtmon_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fri_p3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tues_p3)
+                                    .addComponent(txttues_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sat_p3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(wed_p3)
+                                    .addComponent(txtwed_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(Project2PanelLayout.createSequentialGroup()
+                                .addComponent(txtfri_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtsat_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(sun_p3)
+                                    .addComponent(txtsun_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(thurs_p3)
+                            .addComponent(txtthurs_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(employee_rate_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(employee_name_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Project2PanelLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(update_employee_p3)
+                        .addGap(100, 100, 100))
+                    .addGroup(Project2PanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddMaterial1)
+                            .addComponent(RemoveMaterial1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(edit_material_p3)
+                        .addGap(9, 9, 9)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(material_name_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel17)
+                            .addComponent(material_quantity_p3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(Project2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(Project2PanelLayout.createSequentialGroup()
                     .addGap(256, 256, 256)
@@ -395,7 +607,7 @@ public class NewJFrame extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(Project2Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
 
         Tab1.addTab("Project 1", jPanel3);
@@ -425,6 +637,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        PayrollTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PayrollTable2MouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(PayrollTable2);
 
         AddEmployee2.setText("Add Employee");
@@ -452,6 +669,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 "Name", "Quantity"
             }
         ));
+        ItemTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ItemTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(ItemTable2);
 
         jLabel1.setText("Employee Information");
@@ -483,6 +705,65 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Week:");
 
+        mon_p2.setText("Mon:");
+
+        tues_p2.setText("Tues:");
+
+        wed_p2.setText("Wed:");
+
+        thurs_p2.setText("Thurs:");
+
+        txtmon_p2.setText("    ");
+        txtmon_p2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtmon_p2ActionPerformed(evt);
+            }
+        });
+
+        txttues_p2.setText("    ");
+
+        txtwed_p2.setText("    ");
+
+        txtthurs_p2.setText("    ");
+
+        txtfri_p2.setText("    ");
+
+        txtsat_p2.setText("    ");
+
+        txtsun_p2.setText("    ");
+
+        sun_p2.setText("Sun:");
+
+        sat_p2.setText("Sat:");
+
+        fri_p2.setText("Fri:");
+
+        jLabel6.setText("Name:");
+
+        jLabel7.setText("Quantity:");
+
+        material_quantity_p2.setText("                ");
+
+        edit_material_p2.setText("Edit Material");
+        edit_material_p2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_material_p2ActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("Rate:");
+
+        employee_rate_p2.setText("  ");
+
+        update_employee_p2.setText("Update Employee Payroll");
+        update_employee_p2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                update_employee_p2ActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("   Name:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -498,24 +779,77 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(Week2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(Week2Button))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(AddEmployee2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(RemoveEmployee2))
+                                        .addGap(25, 25, 25)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                        .addGap(4, 4, 4)
+                                                        .addComponent(mon_p2))
+                                                    .addComponent(wed_p2)
+                                                    .addComponent(tues_p2))
+                                                .addComponent(thurs_p2))
+                                            .addComponent(jLabel12)))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(AddItem2)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(RemoveItem2))))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(48, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel13)))
+                                .addGap(25, 25, 25)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(employee_name_p2, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(employee_rate_p2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtthurs_p2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                                            .addComponent(txtmon_p2, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txttues_p2, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtwed_p2, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(fri_p2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(sat_p2))
+                                            .addComponent(sun_p2))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtfri_p2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                                            .addComponent(txtsat_p2)
+                                            .addComponent(txtsun_p2)))))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(10, 10, 10)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(AddEmployee2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(RemoveEmployee2))
+                                        .addComponent(edit_material_p2)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(AddItem2)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel6)
+                                                    .addComponent(jLabel7)))
+                                            .addGap(18, 18, 18)
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(material_quantity_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(material_name_p2, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(RemoveItem2))))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(update_employee_p2)
+                                .addGap(76, 76, 76)))))
+                .addGap(21, 21, 21))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,15 +866,68 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(AddEmployee2)
                     .addComponent(RemoveEmployee2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addGap(4, 4, 4)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddItem2)
-                    .addComponent(RemoveItem2))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabel2)
+                        .addGap(4, 4, 4)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddItem2)
+                            .addComponent(RemoveItem2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edit_material_p2)
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(material_name_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(material_quantity_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(mon_p2)
+                                    .addComponent(txtmon_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tues_p2)
+                                    .addComponent(txttues_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(wed_p2)
+                                    .addComponent(txtwed_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(fri_p2)
+                                    .addComponent(txtfri_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(sat_p2)
+                                    .addComponent(txtsat_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(sun_p2)
+                                    .addComponent(txtsun_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(thurs_p2)
+                            .addComponent(txtthurs_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(employee_rate_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(employee_name_p2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(update_employee_p2)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         Tab1.addTab("Project 2", jPanel2);
@@ -580,7 +967,27 @@ public class NewJFrame extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        EmployeesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EmployeesTableMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(EmployeesTable);
+
+        Update_employee.setText("Update");
+        Update_employee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Update_employeeActionPerformed(evt);
+            }
+        });
+
+        jLabel18.setText("Name:");
+
+        jLabel19.setText("Project(s):");
+
+        txt_employee_name.setText("            ");
+
+        txt_employee_project.setText(" ");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -595,8 +1002,18 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(AddtoEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(RemoveToEmployee))
-                .addContainerGap(267, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(Update_employee, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RemoveToEmployee, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel19))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_employee_project)
+                            .addComponent(txt_employee_name, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -606,7 +1023,17 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(AddtoEmployee)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(RemoveToEmployee))
+                        .addComponent(RemoveToEmployee)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Update_employee)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel18)
+                            .addComponent(txt_employee_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel19)
+                            .addComponent(txt_employee_project, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(123, Short.MAX_VALUE))
@@ -625,6 +1052,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        WarehouseTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                WarehouseTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(WarehouseTable);
 
         UpdateInventory.setText("Update Inventory");
@@ -637,6 +1069,15 @@ public class NewJFrame extends javax.swing.JFrame {
         AddWarehouse.setText("Add Item");
 
         RemoveWarehouse.setText("Remove Item");
+        RemoveWarehouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveWarehouseActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Name:");
+
+        jLabel9.setText("Quantity:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -645,25 +1086,44 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(RemoveWarehouse)
-                    .addComponent(AddWarehouse, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(UpdateInventory))
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(UpdateInventory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(RemoveWarehouse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(AddWarehouse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_employee_id, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_material_name, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(233, 233, 233))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(AddWarehouse)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(RemoveWarehouse)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(UpdateInventory))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(UpdateInventory)
+                        .addGap(47, 47, 47)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_employee_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_material_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))))
                 .addContainerGap(123, Short.MAX_VALUE))
         );
 
@@ -680,11 +1140,41 @@ public class NewJFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        POTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                POTableMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(POTable);
 
         ADDPO.setText("Add ");
+        ADDPO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ADDPOActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("jButton1");
+        REMOVEPO.setText("Remove");
+        REMOVEPO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                REMOVEPOActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Name:");
+
+        jLabel11.setText("Amount:");
+
+        jTextField1.setText("            ");
+
+        jTextField3.setText("                ");
+
+        UPDATEPO.setText("Update");
+        UPDATEPO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UPDATEPOActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -695,9 +1185,21 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ADDPO)
-                    .addComponent(jButton1))
-                .addContainerGap(334, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(REMOVEPO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ADDPO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(UPDATEPO))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11))
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField1)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -707,12 +1209,45 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(ADDPO)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(REMOVEPO)
+                            .addComponent(UPDATEPO))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(123, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Purchase Orders", jPanel6);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CreateProject)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(LoadProject)
+                .addContainerGap(731, Short.MAX_VALUE))
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CreateProject)
+                    .addComponent(LoadProject))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -721,18 +1256,16 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(636, 636, 636))
         );
 
         pack();
-    }// </editor-fold>                
+    }// </editor-fold>                            
 	
 	 /**
      * connects to jcarl database, assuming that the database has already been created after createTables() was called
@@ -759,7 +1292,7 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     private void createTables(String user, String pass) {
         String quer1 = "CREATE DATABASE IF NOT EXISTS jcarl;";
-        String quer2 = "create table project(\n" +
+        String quer2 = "create table IF NOT EXISTS project(\n" +
 "		project_id Integer(6) primary key not null AUTO_INCREMENT,\n" +
 "		project_name Varchar(60) not null,\n" +
 "		start_date Date not null,\n" +
@@ -801,7 +1334,9 @@ public class NewJFrame extends javax.swing.JFrame {
 "		tues Integer(2),\n" +
 "		wed Integer(2),\n" +
 "		thurs Integer(2),\n" +
-"		fri Integer(2),\n" +
+"		fri Integer(2),\n" + 
+"		sat Integer(2),\n" +
+"		sun Integer(2)," +
 "		Foreign key (employee_id) references employee(employee_id) on delete cascade on update restrict,\n" +
 "		Foreign key (project_id) references project(project_id) on delete cascade on update restrict\n" +
 "		);";
@@ -815,7 +1350,6 @@ public class NewJFrame extends javax.swing.JFrame {
            con.close();
            
            //adds tables to database
-           execQuer1(user,pass,quer1);
            execQuer1(user,pass,quer2);
            execQuer1(user,pass,quer3);
            execQuer1(user,pass,quer4);
@@ -960,15 +1494,32 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void initTab1(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Tab1.setTitleAt(0, proj);
+        
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
         int projid = rs.getInt(1);
-        System.out.println(projid);
+        //System.out.println(projid);
         
+        /*
         DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
         "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        "from payroll left join employee\n" +
+        "on employee.employee_id = payroll.employee_id\n" +
+        "where payroll.project_id="+projid+"\n" +
+        "group by employee.employee_id;");
+        PayrollTable1.setModel(dtm);
+        */
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
+        "ifnull(mon, 8) as MONDAY, \n" +
+        "ifnull(tues, 8) as TUESDAY, \n" +
+        "ifnull(wed,8) as WEDNESDAY, \n" +
+        "ifnull(thurs,8) as THURSDAY, \n" +
+        "ifnull(fri,7) as FRIDAY,\n" +
+        "ifnull(sat,7) as SATURDAY,\n" +
+        "ifnull(sun,7) as SUNDAY,\n" +
+        "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+projid+"\n" +
@@ -983,15 +1534,22 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void initTab2(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        //Tab1.setName(proj); //assuming that proj1 is the name of the project
+        Tab1.setTitleAt(1, proj);
+        
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
         int projid = rs.getInt(1);
-        System.out.println(projid);
         
-        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate, mon, tues, wed, thurs, fri,\n" +
-        "SUM(mon+tues+wed+thurs+fri) as 'Total Hours'\n" +
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
+        "ifnull(mon, 8) as MONDAY, \n" +
+        "ifnull(tues, 8) as TUESDAY, \n" +
+        "ifnull(wed,8) as WEDNESDAY, \n" +
+        "ifnull(thurs,8) as THURSDAY, \n" +
+        "ifnull(fri,7) as FRIDAY,\n" +
+        "ifnull(sat,7) as SATURDAY,\n" +
+        "ifnull(sun,7) as SUNDAY,\n" +
+        "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+projid+"\n" +
@@ -1005,28 +1563,52 @@ public class NewJFrame extends javax.swing.JFrame {
         ItemTable2.setModel(dtm2);
     }
 
-  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                                            
+  private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException { 
+      Statement stm = connect(user,pass);
+      ResultSet rs = stm.executeQuery("select project_name from project;");
       
-      //temporary
-      proj1 = "JM's New Dorm";
-      proj2 = "Pet House";
+      ArrayList<String> projlist = new ArrayList<>();
+      while(rs.next()) {
+          projlist.add(rs.getString(1));
+      }
+      String[] projl = new String[projlist.size()];
+      projlist.toArray(projl);
       
-      tab1 = true;
-      tab2 = true;
+      final JComboBox<String> projl1 = new JComboBox<>(projl);
+      final JComboBox<String> projl2 = new JComboBox<>(projl);
+      
+      Object[] fields = {
+            "First Project: ", projl1,
+            "Second Project", projl2,
+        };
+      Object[] options = {"Ok", "Cancel"};
+        
+      int n = JOptionPane.showOptionDialog(null, fields, 
+              "Load Projects", JOptionPane.YES_NO_OPTION, 
+              JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+      
+      if (n == JOptionPane.OK_OPTION){
+          proj1 = (String) projl1.getSelectedItem();
+          proj2 = (String) projl2.getSelectedItem();
+
+          tab1 = true;
+          tab2 = true;
+          
             try {
                 initTab1(proj1);
                 initTab2(proj2);
             } catch (    InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
                 Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+      }
+      
     }                                           
 
     private void Tab1KeyPressed(java.awt.event.KeyEvent evt) {                                
         // TODO add your handling code here:   
     }                               
 
-    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        
+    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {
         //remove material button in tab/project 1
         System.out.println("in 1");
     }                                               
@@ -1070,37 +1652,35 @@ public class NewJFrame extends javax.swing.JFrame {
             MaterialTable1.setModel(dtm2);
         } catch (MySQLSyntaxErrorException lel){
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
-        }
+        }   catch (  SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }    
+        
+        
     }                                            
 
     private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // tab or project 2
-        System.out.println("in 2");
+        // TODO add your handling code here:
     }                                           
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        System.out.println("in 2");
+        System.out.println("lol");
     }                                        
 
     private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        System.out.println("in 2");        // TODO add your handling code here:
-        //this is the Add Employee button of Project 2 tab
+        System.out.println("lol");        // TODO add your handling code here:
     }                                            
 
     private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // Project 1
-        System.out.println("in 1");
+        // TODO add your handling code here:
     }                                               
 
     private void AddtoEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
-        // this is the Add Employee button in the Employees tab
-        System.out.println("hire employee!");
     }                                             
 
     private void RemoveToEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // Employees Tab
-        System.out.println("pink slip");
+        // TODO add your handling code here:
     }                                                
 
     private void UpdateInventoryActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1116,18 +1696,122 @@ public class NewJFrame extends javax.swing.JFrame {
     }                                           
 
     private void RemoveEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        //project 2 tab
-        System.out.println("in 2");
+        // TODO add your handling code here:
     }                                               
 
     private void AddEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        //this is the Add Employee button in Project1 tab
-        System.out.println("in 1");
+        // TODO add your handling code here:
     }                                            
 
     private void CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
     }                                             
+
+    private void WarehouseTableMouseClicked(java.awt.event.MouseEvent evt) {                                            
+        try{
+            
+           
+            int row = WarehouseTable.getSelectedRow();
+            String Table_click = (WarehouseTable.getModel().getValueAt(row,0).toString());
+            String stringcon = "jdbc:mysql://localhost:3306/jcarl";//databaseName=travel;user=root;password=12345
+            Connection con = DriverManager.getConnection(stringcon,"root","12345");
+            String sql = "Select * from material where material_id='"+Table_click+"' ";
+            Statement pst= con.prepareStatement(sql);   
+            ResultSet rr = pst.executeQuery(sql);
+            if(rr.next()){
+                String add1 = rr.getString("material_id");
+                txt_employee_id.setText(add1);
+                String add2 = rr.getString("material_name");
+                txt_material_name.setText(add2);
+           
+                
+          }
+            
+       } catch(Exception e){
+           JOptionPane.showMessageDialog(null,e);
+            
+        }
+    }                                           
+
+    private void RemoveWarehouseActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
+    }                                               
+
+    private void txtmon_p2ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void edit_material_p2ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void ItemTable2MouseClicked(java.awt.event.MouseEvent evt) {                                        
+        // TODO add your handling code here:
+    }                                       
+
+    private void PayrollTable2MouseClicked(java.awt.event.MouseEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
+    private void txtmon_p3ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void edit_material_p3ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void update_employee_p3ActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+        // TODO add your handling code here:
+    }                                                  
+
+    private void update_employee_p2ActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+        // TODO add your handling code here:
+    }                                                  
+
+    private void Update_employeeActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
+    }                                               
+
+    private void EmployeesTableMouseClicked(java.awt.event.MouseEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void POTableMouseClicked(java.awt.event.MouseEvent evt) {                                     
+        // TODO add your handling code here:
+    }                                    
+
+    private void EmployeScrollMouseClicked(java.awt.event.MouseEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
+    private void MaterialTable1MouseClicked(java.awt.event.MouseEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void REMOVEPOActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
+
+    private void ADDPOActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        // TODO add your handling code here:
+    }                                     
+
+    private void UPDATEPOActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
+
+    private void jScrollPane5MouseClicked(java.awt.event.MouseEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void AddWarehouseActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+    }                                            
+
+    private void PayrollTable1MouseClicked(java.awt.event.MouseEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                                
 
     /**
      * @param args the command line arguments
@@ -1194,6 +1878,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTable PayrollTable1;
     private javax.swing.JTable PayrollTable2;
     private javax.swing.JPanel Project2Panel;
+    private javax.swing.JButton REMOVEPO;
     private javax.swing.JButton RemoveEmployee1;
     private javax.swing.JButton RemoveEmployee2;
     private javax.swing.JButton RemoveItem2;
@@ -1201,20 +1886,43 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton RemoveToEmployee;
     private javax.swing.JButton RemoveWarehouse;
     private javax.swing.JTabbedPane Tab1;
+    private javax.swing.JButton UPDATEPO;
     private javax.swing.JButton UpdateInventory;
+    private javax.swing.JButton Update_employee;
     private javax.swing.JTable WarehouseTable;
     private javax.swing.JTextField Week1;
     private javax.swing.JButton Week1Button;
     private javax.swing.JTextField Week2;
     private javax.swing.JButton Week2Button;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton edit_material_p2;
+    private javax.swing.JButton edit_material_p3;
+    private javax.swing.JTextField employee_name_p2;
+    private javax.swing.JTextField employee_name_p3;
+    private javax.swing.JTextField employee_rate_p2;
+    private javax.swing.JTextField employee_rate_p3;
+    private javax.swing.JLabel fri_p2;
+    private javax.swing.JLabel fri_p3;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1230,6 +1938,44 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField material_name_p2;
+    private javax.swing.JTextField material_name_p3;
+    private javax.swing.JTextField material_quantity_p2;
+    private javax.swing.JTextField material_quantity_p3;
+    private javax.swing.JLabel mon_p2;
+    private javax.swing.JLabel mon_p3;
+    private javax.swing.JLabel sat_p2;
+    private javax.swing.JLabel sat_p3;
+    private javax.swing.JLabel sun_p2;
+    private javax.swing.JLabel sun_p3;
+    private javax.swing.JLabel thurs_p2;
+    private javax.swing.JLabel thurs_p3;
+    private javax.swing.JLabel tues_p2;
+    private javax.swing.JLabel tues_p3;
+    private javax.swing.JTextField txt_employee_id;
+    private javax.swing.JTextField txt_employee_name;
+    private javax.swing.JTextField txt_employee_project;
+    private javax.swing.JTextField txt_material_name;
+    private javax.swing.JTextField txtfri_p2;
+    private javax.swing.JTextField txtfri_p3;
+    private javax.swing.JTextField txtmon_p2;
+    private javax.swing.JTextField txtmon_p3;
+    private javax.swing.JTextField txtsat_p2;
+    private javax.swing.JTextField txtsat_p3;
+    private javax.swing.JTextField txtsun_p2;
+    private javax.swing.JTextField txtsun_p3;
+    private javax.swing.JTextField txtthurs_p2;
+    private javax.swing.JTextField txtthurs_p3;
+    private javax.swing.JTextField txttues_p2;
+    private javax.swing.JTextField txttues_p3;
+    private javax.swing.JTextField txtwed_p2;
+    private javax.swing.JTextField txtwed_p3;
+    private javax.swing.JButton update_employee_p2;
+    private javax.swing.JButton update_employee_p3;
+    private javax.swing.JLabel wed_p2;
+    private javax.swing.JLabel wed_p3;
     // End of variables declaration                   
 }
