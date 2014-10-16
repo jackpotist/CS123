@@ -16,15 +16,6 @@ create database jcarl;
 		rate DOUBLE(10,2) not null
 		);
 		
-	create table if not exists purchase_order(
-		po_id Integer(6) primary key not null AUTO_INCREMENT,
-		project_id Integer(6) not null,
-		name VARCHAR(60) not null, 
-		date_issued Date not null,
-		total_price Double(10,2) not null,
-		Foreign key (project_id) references project(project_id) on delete cascade on update restrict
-		);
-		
 	create table if not exists supplier(
 		supplier_id Integer(6) primary key not null AUTO_INCREMENT,
 		supplier_name Varchar(60) not null,
@@ -47,6 +38,16 @@ create database jcarl;
 		quantity Integer(5) not null,
 		foreign key (project_id) references project(project_id) on delete cascade on update restrict,
 		foreign key (material_id) references material(material_id) on delete cascade on update restrict
+		);
+		
+	create table if not exists purchase_order(
+		po_id Integer(6) primary key not null AUTO_INCREMENT,
+		project_id Integer(6) not null,
+		supplier_id Integer(6) not null,
+		name VARCHAR(60) not null, 
+		date_issued Date not null,
+		Foreign key (project_id) references project(project_id) on delete cascade on update restrict,
+		foreign key (supplier_id) references supplier(supplier_id) on delete cascade on update restrict
 		);
 		
 	create table if not exists payroll(

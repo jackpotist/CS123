@@ -8,12 +8,6 @@ insert into project(project_name, start_date, end_date, client) values
 ("London Bridge in Paranaque", "2012-12-21", "2013-12-21", "Annabelle"),
 ("Gym ni Josh", "2002-06-09", "2008-02-04", "Yung Pogi"),
 ("Happy House of Sir Happy", "2014-06-16", "2014-10-17", "Sir Happy");
-insert into purchase_order(project_id, name, date_issued, total_price) values
-(000001, "JM Santos", "2011-01-01", 60000.50),
-(000002, "Pia Encarnacion", "2014-05-21", 50000.00),
-(000003, "Pet Samaco", "2008-01-06", 10.00),
-(000004, "Javy Flavier", "2013-12-02", 600.00),
-(000005, "Joshua Zambales", "2013-12-20", 500000.00);
 insert into supplier(supplier_name, category) values
 ("Warehouse","Current Stocks"),
 ("Captain Board Shorts' Supplies!", "Board Shorts Stuff"),
@@ -37,9 +31,15 @@ insert into material(supplier_id,material_name, quantity, price) values
 (1, "Cabinet", 10, 3000.00),
 (7, "Wooden Plank", 40, 100.00),
 (8, "Painting Frame", 15, 150.50),
-(9, "Cement Paste", 40, 200.00),
+(1, "Cement Paste", 40, 200.00),
 (1, "Metal Frame", 20, 300.00),
 (1, "Railings", 3, 500.99);
+insert into purchase_order(project_id, supplier_id, name, date_issued) values
+(1, 3, "JM Santos", "2011-01-01"),
+(2, 2,"Pia Encarnacion", "2014-05-21"),
+(3, 1,"Pet Samaco", "2008-01-06"),
+(4, 4,"Javy Flavier", "2013-12-02"),
+(8, 1,"Joshua Zambales", "2013-12-20");
 insert into employee(employee_name, rate) values
 ("Mang Jose", 1.00),
 ("Don Romantiko", 5000.00),
