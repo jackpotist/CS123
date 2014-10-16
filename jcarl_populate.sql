@@ -5,24 +5,25 @@ insert into project(project_name, start_date, end_date, client) values
 ("Pet House", "2013-12-01", "2014-12-01", "Captain Board Shorts"),
 ("McDo Caribbean", "2014-10-11", "2014-10-15", "McDo"),
 ("Araneta Park", "2013-12-12", "2014-04-14", "Smart"),
-("London Bridge in Paranaque", "2012-12-21", "2013-12-21", "Annabelle");
-insert into purchase_order(project_id, date_issued, total_price) values
-(000001, "2011-01-01", 60000.50),
-(000002, "2014-05-21", 50000.00),
-(000003, "2008-01-06", 10.00),
-(000004, "2013-12-02", 600.00),
-(000005, "2013-12-20", 500000.00);
+("London Bridge in Paranaque", "2012-12-21", "2013-12-21", "Annabelle"),
+("Gym ni Josh", "2002-06-09", "2008-02-04", "Yung Pogi"),
+("Happy House of Sir Happy", "2014-06-16", "2014-10-17", "Sir Happy");
+insert into purchase_order(project_id, name, date_issued, total_price) values
+(000001, "JM Santos", "2011-01-01", 60000.50),
+(000002, "Pia Encarnacion", "2014-05-21", 50000.00),
+(000003, "Pet Samaco", "2008-01-06", 10.00),
+(000004, "Javy Flavier", "2013-12-02", 600.00),
+(000005, "Joshua Zambales", "2013-12-20", 500000.00);
 insert into supplier(supplier_name, category) values
-<<<<<<< HEAD
 ("Warehouse","Current Stocks"),
-=======
->>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
 ("Captain Board Shorts' Supplies!", "Board Shorts Stuff"),
 ("Gamit ng Lolo mo", "Things"),
 ("McAfee's Metal Materials", "Metal"),
 ("Lolo's Pake", "Pake"),
-("Karinderya", "Food Stuff");
-<<<<<<< HEAD
+("Karinderya", "Food Stuff"),
+("Mang Kanor's Woodworks","Wood"),
+("Don Romantiko's Furniture","Furniture"),
+("Cementadong Pinoy","Cement");
 insert into material(supplier_id,material_name, quantity, price) values
 (2,"Board Shorts", 50, 10000.00), 
 (3,"Antique Glass", 20, 5000.00),
@@ -33,17 +34,12 @@ insert into material(supplier_id,material_name, quantity, price) values
 (2, "Trunks", 20, 500.00),
 (1, "Sound System", 2, 50000.00),
 (1, "Metal Plates", 5, 4000.00),
-(1, "Cabinet", 10, 3000.00);
-=======
-insert into material(supplier_id,material_name, quantity, in_warehouse, price) values
-(1,"Board Shorts", 50, True, 100000.00),
-(2,"Antique Glass", 20, True, 5000.00),
-(3,"Metal Plastic Bag", 30, True, 20.00),
-(4,"Pake", 0, False, 0.99),
-(5,"Fish Bones",10, True, 15.00),
-(5, "Chicarong Bakal", 50, True, 55.99),
-(1, "Trunks", 20, True, 500.00);
->>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
+(1, "Cabinet", 10, 3000.00),
+(7, "Wooden Plank", 40, 100.00),
+(8, "Painting Frame", 15, 150.50),
+(9, "Cement Paste", 40, 200.00),
+(1, "Metal Frame", 20, 300.00),
+(1, "Railings", 3, 500.99);
 insert into employee(employee_name, rate) values
 ("Mang Jose", 1.00),
 ("Don Romantiko", 5000.00),
@@ -52,7 +48,10 @@ insert into employee(employee_name, rate) values
 ("FishNChips", 100.00),
 ("Michael Jordan", 1005.00),
 ("Don Romantiko", 20.00),
-("George Washing", 600.50);
+("George Washing", 600.50),
+("Sean Kingston", 568.44),
+("Flexing Flexo", 669.66),
+("Triple H", 400.00);
 insert into payroll(employee_id, project_id) values
 (1, 1),
 (2, 2),
@@ -63,8 +62,10 @@ insert into payroll(employee_id, project_id) values
 (6,5),
 (7,7),
 (1,6),
-<<<<<<< HEAD
-(8,2);
+(8,2),
+(11,8),
+(9,9),
+(10,7);
 insert into for_use(project_id, material_id, quantity) values
 (1,2,5),
 (4,1,10),
@@ -73,7 +74,11 @@ insert into for_use(project_id, material_id, quantity) values
 (2,3,5),
 (4,4,2),
 (4,7,1),
-(7,2,1);
-=======
-(8,2);
->>>>>>> 527707207b2c1415676ccaf055e5d7b4c8e42207
+(7,2,1),
+(3,8,2),
+(5,9,2),
+(2,10,2),
+(8,14,4),
+(8,13,3),
+(8,12,8),
+(7,7,9);
