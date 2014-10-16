@@ -1,5 +1,6 @@
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
+import java.awt.GridLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,9 +11,14 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class NewJFrame extends javax.swing.JFrame {
 	private String user, pass, proj1, proj2;
-        private boolean tab1, tab2;
+        //private boolean tab1, tab2;
    /**
      * Creates new form NewJFrame
      * @throws java.lang.ClassNotFoundException
@@ -32,8 +38,8 @@ public class NewJFrame extends javax.swing.JFrame {
 //replace with your mysql username and password
        user = "root";
        pass = "root";
-       tab1 = false;
-       tab2 = false;
+       //tab1 = false;
+       //tab2 = false;
        createTables(user, pass); 
        //populate();
            
@@ -338,7 +344,17 @@ public class NewJFrame extends javax.swing.JFrame {
         AddMaterial1.setText("Add");
         AddMaterial1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddMaterial1ActionPerformed(evt);
+                try {
+                    AddMaterial1ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -683,7 +699,17 @@ public class NewJFrame extends javax.swing.JFrame {
         AddItem2.setText("Add");
         AddItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddItem2ActionPerformed(evt);
+                try {
+                    AddItem2ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1609,7 +1635,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
   private void LoadProjectActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                                            
       Statement stm = connect(user,pass);
-      ResultSet rs = stm.executeQuery("select project_name from project;");
+      ResultSet rs = stm.executeQuery("select ifnull(project_name,'NO PROJECTS YET') from project;");
       
       ArrayList<String> projlist = new ArrayList<>();
       while(rs.next()) {
@@ -1623,7 +1649,7 @@ public class NewJFrame extends javax.swing.JFrame {
       
       Object[] fields = {
             "First Project: ", projl1,
-            "Second Project", projl2,
+            "Second Project: ", projl2,
         };
       Object[] options = {"Ok", "Cancel"};
         
@@ -1634,9 +1660,6 @@ public class NewJFrame extends javax.swing.JFrame {
       if (n == JOptionPane.OK_OPTION){
           proj1 = (String) projl1.getSelectedItem();
           proj2 = (String) projl2.getSelectedItem();
-
-          tab1 = true;
-          tab2 = true;
           
             try {
                 initTab1(proj1);
@@ -1656,45 +1679,134 @@ public class NewJFrame extends javax.swing.JFrame {
         System.out.println("in 1");
     }                                               
 
-    private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        //tab or project 1
-        JTextField m_name = new JTextField();
-        JTextField qty = new JTextField();
-        JTextField cost = new JTextField();
-        JTextField i_ware = new JTextField();
+    private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
         
-        //fix the fields that need to be in the pop-up window
-        Object[] fields = {
-            "Material Name", m_name,
-            "Quantity", qty,
-            "Price", cost,
-            "In warehouse?", i_ware,
-        };
+        Object[] options = {"Current Suppliers", "Warehouse"};
         
-        Object[] options = {"Ok", "Cancel"};
+        int n = JOptionPane.showOptionDialog(null, "Add Material from", "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options, null);
         
-        int n = JOptionPane.showOptionDialog(null, fields, "Add Material", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-        
-        try{
-            if (n == JOptionPane.OK_OPTION){
+        if (n == JOptionPane.YES_OPTION){ //if current suppliers option is selected
+            
+            Statement stm = connect(user,pass);
+            ResultSet rs = stm.executeQuery("select supplier_name from supplier where supplier_id>1;");
+
+            ArrayList<String> temp = new ArrayList<>();
+            while(rs.next()) {
+                temp.add(rs.getString(1));
+            }
+            String[] supl = new String[temp.size()];
+            temp.toArray(supl);
+
+            final JComboBox<String> suplist = new JComboBox<>(supl);
+            
+            JTextField m_name = new JTextField();
+            JTextField qty = new JTextField();
+            JTextField cost = new JTextField();
+            
+            Object[] fields = {
+                "Choose Supplier", suplist,
+                "Material Name", m_name,
+                "Quantity", qty,
+                "Price", cost,
+            };
+            
+            Object[] options1 = {"Ok", "Cancel"};
+            
+            int c = JOptionPane.showOptionDialog(null, fields, "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options1, options1[0]);
+            try {
+            if (c == JOptionPane.OK_OPTION){
                 String materialName = m_name.getText();
                 String quantity = qty.getText();
                 String price = cost.getText();
-                String warehouse = i_ware.getText();
+                String supplier = (String)suplist.getSelectedItem();
+                
+                Statement state = connect(user,pass);
+                ResultSet rs1 = state.executeQuery("select supplier_id from supplier where supplier_name=\""+supplier+"\";");
+                rs1.next();
+                int suppid = rs1.getInt(1);
+                String query1 = "insert into material(supplier_id, material_name, quantity, price) values \n" +  "("+suppid+", \"" + materialName + "\", " + quantity + ", " + price + ");";
+                execQuer1(user, pass, query1);
+                
+                ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+materialName+"\";");
+                rs2.next();
+                int nmatid = rs2.getInt(1);
+                
+                ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
+                rs3.next();
+                int projid = rs3.getInt(1);
+                
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                execQuer1(user, pass, query2);
+                state.close();
+                //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+                initTab1(proj1);
+                
+                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj1+": " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            } } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
+            
+        }    else if (n == JOptionPane.NO_OPTION) {
+            
+            Statement stm = connect(user,pass);
+            ResultSet rs = stm.executeQuery("select material_name from material where supplier_id=1;");
 
-                String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" +  "(2, \"" + materialName + "\", " + quantity + ", True," + price + ");";
-                execQuer1(user, pass, query);
-
-                JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName + " costing " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            ArrayList<String> temp1 = new ArrayList<>();
+            while(rs.next()) {
+                    temp1.add(rs.getString(1));
             }
-            //REFRESHING THE GUI
-            DefaultTableModel dtm2 = execQuer2(user,pass,"");
-            MaterialTable1.setModel(dtm2);
-        } catch (MySQLSyntaxErrorException lel){
-            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
-        }   catch (  SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }    
+            String[] warehouse = new String[temp1.size()];
+            temp1.toArray(warehouse);
+
+            final JComboBox<String> matlist = new JComboBox<>(warehouse);
+            
+            JTextField qty = new JTextField();
+            
+            Object[] fields = {
+                "Choose Material", matlist,
+                "Quantity", qty
+            };
+            
+            Object[] options1 = {"Ok", "Cancel"};
+            
+            int c = JOptionPane.showOptionDialog(null, fields, "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options1, options1[0]);
+            try {
+            if (c == JOptionPane.OK_OPTION){
+                //String materialName = m_name.getText();
+                String quantity = qty.getText();
+                //String price = cost.getText();
+                String selmat = (String)matlist.getSelectedItem();
+                
+                Statement state = connect(user,pass);
+                
+                ResultSet rs1 = state.executeQuery("select price from material where material_name=\""+selmat+"\";");
+                rs1.next();
+                int price = rs1.getInt(1);
+                
+                ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+selmat+"\";");
+                rs2.next();
+                int nmatid = rs2.getInt(1);
+                
+                ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
+                rs3.next();
+                int projid = rs3.getInt(1);
+                
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                execQuer1(user, pass, query2);
+                state.close();
+                //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+                initTab1(proj1);
+                
+                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj1+": " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            } } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
+            
+        }
     }                                            
 
     private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -1702,45 +1814,133 @@ public class NewJFrame extends javax.swing.JFrame {
         System.out.println("in 2");
     }                                           
 
-    private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        //System.out.println("in 2");
-        JTextField m_name = new JTextField();
-        JTextField qty = new JTextField();
-        JTextField cost = new JTextField();
-        JTextField i_ware = new JTextField();
+    private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
+        Object[] options = {"Current Suppliers", "Warehouse"};
         
-        //fix the fields that need to be in the pop-up window
-        Object[] fields = {
-            "Material Name", m_name,
-            "Quantity", qty,
-            "Price", cost,
-            "In warehouse?", i_ware,
-        };
+        int n = JOptionPane.showOptionDialog(null, "Add Material from", "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options, null);
         
-        Object[] options = {"Ok", "Cancel"};
-        
-        int n = JOptionPane.showOptionDialog(null, fields, "Add Material", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-        
-        try{
-            if (n == JOptionPane.OK_OPTION){
+        if (n == JOptionPane.YES_OPTION){ //if current suppliers option is selected
+            
+            Statement stm = connect(user,pass);
+            ResultSet rs = stm.executeQuery("select supplier_name from supplier where supplier_id>1;");
+
+            ArrayList<String> temp = new ArrayList<>();
+            while(rs.next()) {
+                temp.add(rs.getString(1));
+            }
+            String[] supl = new String[temp.size()];
+            temp.toArray(supl);
+
+            final JComboBox<String> suplist = new JComboBox<>(supl);
+            
+            JTextField m_name = new JTextField();
+            JTextField qty = new JTextField();
+            JTextField cost = new JTextField();
+            
+            Object[] fields = {
+                "Choose Supplier", suplist,
+                "Material Name", m_name,
+                "Quantity", qty,
+                "Price", cost,
+            };
+            
+            Object[] options1 = {"Ok", "Cancel"};
+            
+            int c = JOptionPane.showOptionDialog(null, fields, "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options1, options1[0]);
+            try {
+            if (c == JOptionPane.OK_OPTION){
                 String materialName = m_name.getText();
                 String quantity = qty.getText();
                 String price = cost.getText();
-                String warehouse = i_ware.getText();
+                String supplier = (String)suplist.getSelectedItem();
+                
+                Statement state = connect(user,pass);
+                ResultSet rs1 = state.executeQuery("select supplier_id from supplier where supplier_name=\""+supplier+"\";");
+                rs1.next();
+                int suppid = rs1.getInt(1);
+                String query1 = "insert into material(supplier_id, material_name, quantity, price) values \n" +  "("+suppid+", \"" + materialName + "\", " + quantity + ", " + price + ");";
+                execQuer1(user, pass, query1);
+                
+                ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+materialName+"\";");
+                rs2.next();
+                int nmatid = rs2.getInt(1);
+                
+                ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
+                rs3.next();
+                int projid = rs3.getInt(1);
+                
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                execQuer1(user, pass, query2);
+                state.close();
+                //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+                initTab2(proj2);
+                
+                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj2+": " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            } } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
+            
+        }    else if (n == JOptionPane.NO_OPTION) {
+            
+            Statement stm = connect(user,pass);
+            ResultSet rs = stm.executeQuery("select material_name from material where supplier_id=1;");
 
-                String query = "insert into material(supplier_id, material_name, quantity, in_warehouse, price) values \n" +  "(2, \"" + materialName + "\", " + quantity + ", True," + price + ");";
-                execQuer1(user, pass, query);
+            ArrayList<String> temp1 = new ArrayList<>();
+            while(rs.next()) {
+                    temp1.add(rs.getString(1));
+            }
+            String[] warehouse = new String[temp1.size()];
+            temp1.toArray(warehouse);
 
-                JOptionPane.showMessageDialog( null, "New item in inventory: " +  quantity + " " + materialName + " costing " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
-            }
-            //REFRESHING THE GUI
-            DefaultTableModel dtm2 = execQuer2(user,pass,"");
-            ItemTable2.setModel(dtm2);
-        } catch (MySQLSyntaxErrorException lel){
-            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
-        }   catch (  SQLException | InstantiationException | ClassNotFoundException | IllegalAccessException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            final JComboBox<String> matlist = new JComboBox<>(warehouse);
+            
+            JTextField qty = new JTextField();
+            
+            Object[] fields = {
+                "Choose Material", matlist,
+                "Quantity", qty
+            };
+            
+            Object[] options1 = {"Ok", "Cancel"};
+            
+            int c = JOptionPane.showOptionDialog(null, fields, "Add Material", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, options1, options1[0]);
+            try {
+            if (c == JOptionPane.OK_OPTION){
+                //String materialName = m_name.getText();
+                String quantity = qty.getText();
+                //String price = cost.getText();
+                String selmat = (String)matlist.getSelectedItem();
+                
+                Statement state = connect(user,pass);
+                
+                ResultSet rs1 = state.executeQuery("select price from material where material_name=\""+selmat+"\";");
+                rs1.next();
+                int price = rs1.getInt(1);
+                
+                ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+selmat+"\";");
+                rs2.next();
+                int nmatid = rs2.getInt(1);
+                
+                ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
+                rs3.next();
+                int projid = rs3.getInt(1);
+                
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                execQuer1(user, pass, query2);
+                state.close();
+                //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
+                initTab2(proj2);
+                
+                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj2+": " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+            } } catch (MySQLSyntaxErrorException lel){
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
+            
+        }
     }                                        
 
     private void AddEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                             
