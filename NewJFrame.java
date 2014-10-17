@@ -2285,13 +2285,12 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void UpdateInventoryActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {     
                 // TODO add your handling code here:
+        
         Statement state = connect(user,pass);
-        String quer ="select distinct material.material_name as MATERIALS, \n" +
-            "	material.quantity as QUANTITY\n" +
-            "	from supplier, material, for_use, project\n" +
-            "	where (material.material_id = for_use.material_id)\n" +
-            "	and (project.project_id = for_use.project_id)\n" +
-            "	and material.supplier_id = 1;";
+        String quer ="select distinct material.material_id, material_name, material.quantity\n" +
+            "from material left join for_use\n" +
+            "on for_use.material_id=material.material_id\n" +
+            "where supplier_id=1;";
         ResultSet set = state.executeQuery(quer);
         
                 DefaultTableModel dtm5 = getTable(set);
