@@ -56,12 +56,10 @@ public class NewJFrame extends javax.swing.JFrame {
             "order by employee.employee_id asc;");
             EmployeesTable.setModel(dtm4);
             
-            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_name as MATERIALS, \n" +
-            "	material.quantity as QUANTITY\n" +
-            "	from supplier, material, for_use, project\n" +
-            "	where (material.material_id = for_use.material_id)\n" +
-            "	and (project.project_id = for_use.project_id)\n" +
-            "	and material.supplier_id = 1;");
+            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_id, material_name, material.quantity\n" +
+            "from material left join for_use\n" +
+            "on for_use.material_id=material.material_id\n" +
+            "where supplier_id=1;");
             WarehouseTable.setModel(dtm5);
             
             
@@ -752,15 +750,7 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    try {
                         RemoveItem2ActionPerformed(evt);
-                    } catch (InstantiationException ex) {
-                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1675,7 +1665,7 @@ public class NewJFrame extends javax.swing.JFrame {
         "group by employee.employee_id;");
         PayrollTable1.setModel(dtm);
 
-        DefaultTableModel dtm2 = execQuer2(user,pass,"select distinct material.material_name as MATERIALS,\n" +
+        DefaultTableModel dtm2 = execQuer2(user,pass,"select distinct material.material_id, material.material_name as MATERIALS,\n" +
 "	material.quantity as QUANTITY\n" +
 "	from project, material, for_use\n" +
 "	where (project.project_id = for_use.project_id)\n" +
@@ -1713,7 +1703,7 @@ public class NewJFrame extends javax.swing.JFrame {
         "group by employee.employee_id;");
         PayrollTable2.setModel(dtm);
 
-        DefaultTableModel dtm2 = execQuer2(user,pass,"select distinct material.material_name as MATERIALS,\n" +
+        DefaultTableModel dtm2 = execQuer2(user,pass,"select distinct material.material_id, material.material_name as MATERIALS,\n" +
 "	material.quantity as QUANTITY\n" +
 "	from project, material, for_use\n" +
 "	where (project.project_id = for_use.project_id)\n" +
@@ -1773,7 +1763,7 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:   
     }                               
 
-private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {                               
+    private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {                               
        if (MaterialTable1.getSelectedRow() == -1){
            JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
        }
@@ -1781,7 +1771,7 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
            int[] toDelete = MaterialTable1.getSelectedRows();
            String rows = new String();
            for (int i = 0; i < toDelete.length; i++){
-               rows += "" + MaterialTable1.getValueAt(toDelete[i], 0).toString();
+               rows += "" + MaterialTable1.getValueAt(toDelete[i], 1).toString();
                if (i < toDelete.length-1)
                     rows += ", ";
                if (i == toDelete.length)
@@ -1790,25 +1780,27 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
            Object question = "Are you sure you want to delete the following items: " + rows + "?";
            Object[] options = {"Yes", "No"};
            
+           rows.replace("?", "");
+           
            int n = JOptionPane.showOptionDialog(null, question, "Remove Items", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-           try{
-                if (n == JOptionPane.OK_OPTION){
-                    String q = new String();
-                    q = rows.replace(", ", " OR ");
-                    q = rows.replace("?", "");
-                    String query = "DELETE FROM for_use WHERE material_name = \"" + rows + "\";";
-                    execQuer1(user, pass, query);
-
-                    rows.replace("?", "");
-                    JOptionPane.showMessageDialog(null, "The following materials have been deleted from the database:" + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
-                //DELETE NECESSARY ROWS
-                for (int i = 0; i < toDelete.length; i++)
+           if (n == JOptionPane.OK_OPTION){
+               String q = "material_id = ";
+               for (int i = 0; i < toDelete.length; i++){
+                   q += "" + MaterialTable1.getValueAt(toDelete[0], 0);
+                   if (i < toDelete.length-1)
+                       q += " OR ";
+               }
+               
+               String query = "DELETE FROM for_use WHERE "+ q + " AND project_id =" + proj1 + ";";
+               execQuer1(user, pass, query);
+               
+               JOptionPane.showMessageDialog(null, "The following materials have been deleted from the database: " + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
+               //DELETE NECESSARY ROWS
+               for (int i = 0; i < toDelete.length; i++)
                    ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);
-                initTab1(proj1);
-                }
-           } catch (MySQLSyntaxErrorException lel) {}
+           }
        }
-    }                               
+    }                            
 
     private void AddMaterial1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
         Object[] options = {"Current Suppliers", "Warehouse"};
@@ -1939,15 +1931,14 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
         }
     }                                            
 
-    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException{                                   
-        if (ItemTable2.getSelectedRow() == -1){
+    private void RemoveItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException{                                   if (ItemTable2.getSelectedRow() == -1){
            JOptionPane.showMessageDialog(null, "Please select an item to remove", "Error!", JOptionPane.ERROR_MESSAGE);
        }
        else{
            int[] toDelete = ItemTable2.getSelectedRows();
            String rows = new String();
            for (int i = 0; i < toDelete.length; i++){
-               rows += "" + ItemTable2.getValueAt(toDelete[i], 0).toString();
+               rows += "" + ItemTable2.getValueAt(toDelete[i], 1).toString();
                if (i < toDelete.length-1)
                     rows += ", ";
                if (i == toDelete.length)
@@ -1956,25 +1947,29 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
            Object question = "Are you sure you want to delete the following items: " + rows + "?";
            Object[] options = {"Yes", "No"};
            
+           rows.replace("?", "");
+           
            int n = JOptionPane.showOptionDialog(null, question, "Remove Items", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
            try{
                 if (n == JOptionPane.OK_OPTION){
-                    String q = new String();
-                    q = rows.replace(", ", " OR ");
-                    q = rows.replace("?", "");
-                    String query = "DELETE FROM material WHERE material_name = \"" + rows + "\";";
+                    String q = "material_id = ";
+                    for (int i = 0; i < toDelete.length; i++){
+                        q += "" + ItemTable2.getValueAt(toDelete[0], 0);
+                        if (i < toDelete.length-1)
+                            q += " OR ";
+                    }
+
+                    String query = "DELETE FROM for_use WHERE "+ q + " AND project_id =" + proj2 + ";";
                     execQuer1(user, pass, query);
 
-                    rows.replace("?", "");
-                    JOptionPane.showMessageDialog(null, "The following materials have been deleted from the database:" + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
-                //DELETE NECESSARY ROWS
-                for (int i = 0; i < toDelete.length; i++)
-                   ((DefaultTableModel)ItemTable2.getModel()).removeRow(toDelete[i]);
-                initTab2(proj2);
-                }
+                    JOptionPane.showMessageDialog(null, "The following materials have been removed from the project: " + rows, "Materials deleted", JOptionPane.PLAIN_MESSAGE);
+                    //DELETE NECESSARY ROWS
+                    for (int i = 0; i < toDelete.length; i++)
+                       ((DefaultTableModel)ItemTable2.getModel()).removeRow(toDelete[i]);
+                    }
            } catch (MySQLSyntaxErrorException lel) {}
        }
-    }                                 
+    }                                  
 
     private void AddItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
         Object[] options = {"Current Suppliers", "Warehouse"};
@@ -2795,12 +2790,10 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
         }   catch (SQLException ex) {
                 Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
             } //REFRESHING THE GUI
-            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_name as MATERIALS, \n" +
-            "	material.quantity as QUANTITY\n" +
-            "	from supplier, material, for_use, project\n" +
-            "	where (material.material_id = for_use.material_id)\n" +
-            "	and (project.project_id = for_use.project_id)\n" +
-            "	and material.supplier_id = 1;");
+            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_id, material_name, material.quantity\n" +
+            "from material left join for_use\n" +
+            "on for_use.material_id=material.material_id\n" +
+            "where supplier_id=1;");
             WarehouseTable.setModel(dtm5);
     }                                            
 
