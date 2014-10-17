@@ -1,3 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author piaencar
+ */
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.awt.GridLayout;
@@ -21,17 +31,9 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *MAKE QUERY A FUCKING PARAMETER
- * @author JoshuaZambales
- */
 public class JCarlSystem extends javax.swing.JFrame {
 	private String user, pass, proj1, proj2;
        
-   /**
-     * Creates new form JCarlSystem
-     * @throws java.lang.ClassNotFoundException
-     */
      public JCarlSystem() throws ClassNotFoundException, SQLException {
        initComponents();
 //replace with your mysql username and password
@@ -39,7 +41,7 @@ public class JCarlSystem extends javax.swing.JFrame {
        pass = "root";
       
        createTables(user, pass); 
-       populate();
+       //populate();
            
         try {
             DefaultTableModel dtm3 = execQuer2(user,pass,"select project.project_name as PROJECT, \n" +
@@ -65,7 +67,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             
             
         } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
        
        
@@ -238,7 +240,7 @@ public class JCarlSystem extends javax.swing.JFrame {
                 try {
                     LoadProjectActionPerformed(evt);
                 } catch (SQLException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -362,13 +364,13 @@ public class JCarlSystem extends javax.swing.JFrame {
                 try {
                     AddMaterial1ActionPerformed(evt);
                 } catch (SQLException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InstantiationException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalAccessException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1137,13 +1139,13 @@ public class JCarlSystem extends javax.swing.JFrame {
                 try {
                     AddWarehouseActionPerformed(evt);
                 } catch (SQLException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InstantiationException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalAccessException ex) {
-                    Logger.getLogger(NewClass.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1259,10 +1261,20 @@ public class JCarlSystem extends javax.swing.JFrame {
 
         jTextField3.setText("                ");
 
-        UPDATEPO.setText("Update");
+        UPDATEPO.setText("Update Purchase Order");
         UPDATEPO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UPDATEPOActionPerformed(evt);
+                try {
+                    UPDATEPOActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1586,7 +1598,6 @@ public class JCarlSystem extends javax.swing.JFrame {
         "(10,7);";
         execQuer1(user,pass,quer4);
         
-        //execQuer1(user,pass,"ALTER TABLE material AUTO_INCREMENT = 002000;");
         String quer5 = "insert into material(supplier_id,material_name, quantity, price) values\n" +
         "(2,\"Board Shorts\", 50, 10000.00), \n" +
         "(3,\"Antique Glass\", 20, 5000.00),\n" +
@@ -1640,8 +1651,8 @@ public class JCarlSystem extends javax.swing.JFrame {
         String tproj =  rs1.getObject(1).toString();
         state.close();
         Tab1.setTitleAt(0, tproj);
-		
-        DefaultTableModel dtm = execQuer2(user,pass, "select employee.employee_id, employee_name as NAME, rate,\n" +
+        
+        DefaultTableModel dtm = execQuer2(user,pass, "select employee_name as NAME, rate,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -1672,8 +1683,8 @@ public class JCarlSystem extends javax.swing.JFrame {
         String tproj =  rs1.getObject(1).toString();
         state.close();
         Tab1.setTitleAt(1, tproj);
-		
-      DefaultTableModel dtm = execQuer2(user,pass, "select employee.employee_id, employee_name as NAME, rate,\n" +
+        
+      DefaultTableModel dtm = execQuer2(user,pass, "select employee_name as NAME, rate,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -1718,7 +1729,7 @@ public class JCarlSystem extends javax.swing.JFrame {
         
       int n = JOptionPane.showOptionDialog(null, fields, 
               "Load Projects", JOptionPane.YES_NO_OPTION, 
-              JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+              JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
       
       if (n == JOptionPane.OK_OPTION){
           String tempproj1 = (String) projl1.getSelectedItem();
@@ -2104,7 +2115,7 @@ public class JCarlSystem extends javax.swing.JFrame {
 
         int n = JOptionPane.showOptionDialog(null, fields, 
             "Add Employee to Project", JOptionPane.YES_NO_OPTION, 
-            JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+            JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
         if (n == JOptionPane.OK_OPTION){
             String selemp = (String)employlist.getSelectedItem();
@@ -2128,57 +2139,53 @@ public class JCarlSystem extends javax.swing.JFrame {
               
           }
     }                                            
-
-   private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                
-        
+    private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         if (PayrollTable1.getSelectedRow() == -1){
-           JOptionPane.showMessageDialog(null, "Please select employee to remove from payroll", "Error!", JOptionPane.ERROR_MESSAGE);
-       }
-       else{
-           int[] toDelete = PayrollTable1.getSelectedRows();
-           String rows = new String();
-           ArrayList<String> rowall = new ArrayList<>();
-           
-           for (int i = 0; i < toDelete.length; i++){
-               rows += "" + PayrollTable1.getValueAt(toDelete[i], 0).toString();
-               if (i < toDelete.length-1)
-                    rows += ", ";
-               if (i == toDelete.length)
-                    rows += "?";
-               rowall.add(PayrollTable1.getValueAt(toDelete[i], 0).toString());
-           }
-           Object question = "Are you sure you want to remove the following employees: " + rows + "?";
-           Object[] options = {"Yes", "No"};
-           
-           int n = JOptionPane.showOptionDialog(null, question, "Remove Employees from Project", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-           try{
-                if (n == JOptionPane.OK_OPTION){
-                    
-                    for (int i = 0; i < toDelete.length; i++){
-                        Statement state = connect(user,pass);
-                        ResultSet rs1 = state.executeQuery("select employee_id from employee where employee_name=\""+rowall.get(i)+"\";");
-                        rs1.next();
-                        String tempid =  rs1.getObject(1).toString();
-                        state.close();
-                        String query = "DELETE FROM payroll WHERE employee_id = \"" + tempid + "\";";
-                        execQuer1(user, pass, query);
+                   JOptionPane.showMessageDialog(null, "Please select employee to remove from payroll", "Error!", JOptionPane.ERROR_MESSAGE);
+               }
+               else{
+                   int[] toDelete = PayrollTable1.getSelectedRows();
+                   String rows = new String();
+                   ArrayList<String> rowall = new ArrayList<>();
+
+                   for (int i = 0; i < toDelete.length; i++){
+                       rows += "" + PayrollTable1.getValueAt(toDelete[i], 0).toString();
+                       if (i < toDelete.length-1)
+                            rows += ", ";
+                       if (i == toDelete.length)
+                            rows += "?";
+                       rowall.add(PayrollTable1.getValueAt(toDelete[i], 0).toString());
+                   }
+                   Object question = "Are you sure you want to remove the following employees: " + rows + "?";
+                   Object[] options = {"Yes", "No"};
+
+                   int n = JOptionPane.showOptionDialog(null, question, "Remove Employees from Project", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                   try{
+                        if (n == JOptionPane.OK_OPTION){
+
+                            for (int i = 0; i < toDelete.length; i++){
+
+                                Statement state = connect(user,pass);
+                                ResultSet rs1 = state.executeQuery("select employee_id from employee where employee_name=\""+rowall.get(i)+"\";");
+                                rs1.next();
+                                String tempid =  rs1.getString(1);
+                                state.close();
+                                String query = "DELETE FROM payroll WHERE employee_id = \"" + tempid + "\";";
+                                execQuer1(user, pass, query);
+                            }
+                            JOptionPane.showMessageDialog(null, "The following employees have been removed from payroll: " + rows, "Employees Removed", JOptionPane.PLAIN_MESSAGE);
+
+                        initTab1(proj1);
+                        }
+                   } catch (MySQLSyntaxErrorException lel) {} catch (InstantiationException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    JOptionPane.showMessageDialog(null, "The following employees have been removed from payroll: " + rows, "Employees Removed", JOptionPane.PLAIN_MESSAGE);
-                //DELETE NECESSARY ROWS 
-                    /*
-                for (int i = 0; i < toDelete.length; i++)
-                   ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);*/
-                initTab1(proj1);
-                }
-           } catch (MySQLSyntaxErrorException lel) {} catch (InstantiationException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-       }
-    }                               
+               }
+        }                            
 
     private void AddtoEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
@@ -2206,13 +2213,12 @@ public class JCarlSystem extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "New employee: " + employeeName + "  Rate: " + rate, "Employee Added", JOptionPane.PLAIN_MESSAGE);
             }
             //REFRESHING THE GUI
-            DefaultTableModel dtm2 = execQuer2(user, pass, "select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ',') as PROJECT \n"
-                    + "from employee left join payroll on employee.employee_id = payroll.employee_id\n"
-                    + "left join project on project.project_id = payroll.project_id\n"
-                    + "group by employee_name\n"
-                    + "order by employee.employee_id asc;");
-            //select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;
-            EmployeesTable.setModel(dtm2);
+            DefaultTableModel dtm4 = execQuer2(user,pass,"select employee.employee_id as ID, employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT \n" +
+            "from employee left join payroll on employee.employee_id = payroll.employee_id\n" +
+            "left join project on project.project_id = payroll.project_id\n" +
+            "group by employee_name\n" +
+            "order by employee.employee_id asc;");
+            EmployeesTable.setModel(dtm4);
         } catch (MySQLSyntaxErrorException lel) {
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
         }   catch (SQLException ex) {
@@ -2241,6 +2247,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             ResultSet rr = pst.executeQuery(sql);
             String value1 = txt_employee_name.getText();
             String sql2 = "DELETE from employee where employee_id ='"+Integer.parseInt(Table_click) +"'";
+            
             String update = "select employee.employee_id as ID, employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT \n" +
             "from employee left join payroll on employee.employee_id = payroll.employee_id\n" +
             "left join project on project.project_id = payroll.project_id\n" +
@@ -2326,7 +2333,7 @@ public class JCarlSystem extends javax.swing.JFrame {
                         Statement state = connect(user,pass);
                         ResultSet rs1 = state.executeQuery("select employee_id from employee where employee_name=\""+rowall.get(i)+"\";");
                         rs1.next();
-                        String tempid =  rs1.getObject(1).toString();
+                        String tempid =  rs1.getString(1);
                         state.close();
                         String query = "DELETE FROM payroll WHERE employee_id = \"" + tempid + "\";";
                         execQuer1(user, pass, query);
@@ -2371,7 +2378,7 @@ public class JCarlSystem extends javax.swing.JFrame {
 
         int n = JOptionPane.showOptionDialog(null, fields, 
             "Add Employee to Project", JOptionPane.YES_NO_OPTION, 
-            JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+            JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
         if (n == JOptionPane.OK_OPTION){
             String selemp = (String)employlist.getSelectedItem();
@@ -2582,7 +2589,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             if(rr.next()){
                 String add1 = rr.getString("t.MATERIALS");
                 txt_material_name.setText(add1);
-                System.out.print("22");
+                //System.out.print("22");
                 String add2 = rr.getString("t.QUANTITY");
                 txt_material_quantity.setText(add2);     
           }
@@ -2692,7 +2699,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             String Table_click = (PayrollTable2.getModel().getValueAt(row,0).toString());
             String stringcon = "jdbc:mysql://localhost:3306/jcarl";//databaseName=travel;user=root;password=root
             Connection con = DriverManager.getConnection(stringcon,"root","root");
-            String sql = "select * from(select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
+            String sql = "select * from(select employee_name as NAME, rate as RATE,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -2704,7 +2711,7 @@ public class JCarlSystem extends javax.swing.JFrame {
         "from payroll left join employee\n" +
         "on employee.employee_ID = payroll.employee_id\n" +
         "where payroll.project_id="+proj2+"\n" +
-        "group by employee.employee_id)t where t.ID='"+Table_click+"'";
+        "group by employee.employee_id)t where t.NAME='"+Table_click+"'";
             Statement pst= con.prepareStatement(sql);   
             ResultSet rr = pst.executeQuery(sql);
             if(rr.next()){
@@ -2779,7 +2786,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             String Table_click = (PayrollTable1.getModel().getValueAt(row,0).toString());
             String stringcon = "jdbc:mysql://localhost:3306/jcarl";//databaseName=travel;user=root;password=root
             Connection con = DriverManager.getConnection(stringcon,"root","root");
-            String sql = "select * from(select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
+            String sql = "select * from(select employee_name as NAME, rate as RATE,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -2791,7 +2798,7 @@ public class JCarlSystem extends javax.swing.JFrame {
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+proj1+"\n" +
-        "group by employee.employee_id)t where t.ID='"+Table_click+"'";
+        "group by employee.employee_id)t where t.NAME=\""+Table_click+"\"";
             Statement pst= con.prepareStatement(sql);   
             ResultSet rr = pst.executeQuery(sql);
             int value1 = Integer.parseInt(txtmon_p3.getText());
@@ -2802,12 +2809,19 @@ public class JCarlSystem extends javax.swing.JFrame {
             int value6 = Integer.parseInt(txtsat_p3.getText());
             int value7 = Integer.parseInt(txtsun_p3.getText());
             double value8 = Double.parseDouble(employee_rate_p3.getText());
+            String sql1 = "select employee_id where employee_name=\""+Table_click+"\"";
+            
+            ResultSet rs2 = pst.executeQuery("select employee_id from employee where employee_name=\""+Table_click+"\";");
+            rs2.next();
+            int empid = rs2.getInt(1);
+            
             String sql2 = "UPDATE payroll SET mon= '"+value1+"',tues=  '"+value2+"',wed=  '"+value3+"',thurs=  '"+value4+"',fri= '"+value5+"'"
-            + ",sat=  '"+value6+"',sun=  '"+value7+"' where employee_id ='"+Integer.parseInt(Table_click) +"' and project_id = '"+proj1+"'";
-            String sql3 = "UPDATE employee SET rate = '"+value8+"' where employee_id ='"+Integer.parseInt(Table_click) +"'";    
+            + ",sat=  '"+value6+"',sun=  '"+value7+"' where employee_id="+empid+" and project_id = '"+proj1+"'";
+            String sql3 = "UPDATE employee SET rate = '"+value8+"' where employee_name =\""+Table_click +"\"";    
             execQuer1(user,pass,sql2);
             execQuer1(user,pass,sql3);
-            String update = "select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
+            /*
+            String update = "select employee_name as NAME, rate as RATE,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -2821,9 +2835,11 @@ public class JCarlSystem extends javax.swing.JFrame {
         "where payroll.project_id="+proj1+"\n" +
         "group by employee.employee_id";
             DefaultTableModel dtm = execQuer2(user,pass,update);
-            PayrollTable1.setModel(dtm);
+            PayrollTable1.setModel(dtm);*/
+            initTab1(proj1);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Make sure to click a row and make sure that working hours are whole numbers.");
+            //Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, e);
         }
     }                                                                  
 
@@ -2833,7 +2849,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             String Table_click = (PayrollTable2.getModel().getValueAt(row,0).toString());
             String stringcon = "jdbc:mysql://localhost:3306/jcarl";//databaseName=travel;user=root;password=root
             Connection con = DriverManager.getConnection(stringcon,"root","root");
-            String sql = "select * from(select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
+            String sql = "select * from(select employee_name as NAME, rate as RATE,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -2845,7 +2861,7 @@ public class JCarlSystem extends javax.swing.JFrame {
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+proj2+"\n" +
-        "group by employee.employee_id)t where t.ID='"+Table_click+"'";
+        "group by employee.employee_id)t where t.NAME=\""+Table_click+"\";";
             Statement pst= con.prepareStatement(sql);   
             ResultSet rr = pst.executeQuery(sql);
             int value1 = Integer.parseInt(txtmon_p2.getText());
@@ -2856,28 +2872,22 @@ public class JCarlSystem extends javax.swing.JFrame {
             int value6 = Integer.parseInt(txtsat_p2.getText());
             int value7 = Integer.parseInt(txtsun_p2.getText());
             double value8 = Double.parseDouble(employee_rate_p2.getText());
+            String sql1 = "select employee_id where employee_name=\""+Table_click+"\"";
+            
+            ResultSet rs2 = pst.executeQuery("select employee_id from employee where employee_name=\""+Table_click+"\";");
+            rs2.next();
+            int empid = rs2.getInt(1);
+            
             String sql2 = "UPDATE payroll SET mon= '"+value1+"',tues=  '"+value2+"',wed=  '"+value3+"',thurs=  '"+value4+"',fri= '"+value5+"'"
-            + ",sat=  '"+value6+"',sun=  '"+value7+"' where employee_id ='"+Integer.parseInt(Table_click) +"' and project_id = '"+proj2+"'";
-            String sql3 = "UPDATE employee SET rate = '"+value8+"' where employee_id ='"+Integer.parseInt(Table_click) +"'";    
+            + ",sat=  '"+value6+"',sun=  '"+value7+"' where employee_id="+empid+" and project_id = '"+proj2+"'";
+            String sql3 = "UPDATE employee SET rate = '"+value8+"' where employee_name =\""+Table_click +"\"";    
             execQuer1(user,pass,sql2);
             execQuer1(user,pass,sql3);
-            String update = "select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
-        "ifnull(mon, 0) as MONDAY, \n" +
-        "ifnull(tues, 0) as TUESDAY, \n" +
-        "ifnull(wed,0) as WEDNESDAY, \n" +
-        "ifnull(thurs,0) as THURSDAY, \n" +
-        "ifnull(fri,0) as FRIDAY,\n" +
-        "ifnull(sat,0) as SATURDAY,\n" +
-        "ifnull(sun,0) as SUNDAY,\n" +
-        "ifnull(((mon+tues+wed+thurs+fri+sat+sun)*rate),0*rate) as 'Salary'\n" +
-        "from payroll left join employee\n" +
-        "on employee.employee_id = payroll.employee_id\n" +
-        "where payroll.project_id="+proj2+"\n" +
-        "group by employee.employee_id";
-            DefaultTableModel dtm = execQuer2(user,pass,update);
-            PayrollTable2.setModel(dtm);
+            
+            initTab2(proj2);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Make sure to click a row and enter valid input");
+            //Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, e);
         }
     }                                                         
 
@@ -2974,6 +2984,58 @@ public class JCarlSystem extends javax.swing.JFrame {
 
     private void REMOVEPOActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
+        if (POTable.getSelectedRow() == -1){
+           JOptionPane.showMessageDialog(null, "Please select purchase order", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
+       else{
+           int[] toDelete = POTable.getSelectedRows();
+           String rows = new String();
+           ArrayList<String> rowall = new ArrayList<>();
+           
+           for (int i = 0; i < toDelete.length; i++){
+               rows += "" + POTable.getValueAt(toDelete[i], 0).toString();
+               if (i < toDelete.length-1)
+                    rows += ", ";
+               if (i == toDelete.length)
+                    rows += "?";
+               rowall.add(POTable.getValueAt(toDelete[i], 0).toString());
+           }
+           Object question = "Are you sure you want to remove the following purchase orders: " + rows + "?";
+           Object[] options = {"Yes", "No"};
+           
+           int n = JOptionPane.showOptionDialog(null, question, "Remove Purchase Order", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+           try{
+                if (n == JOptionPane.OK_OPTION){
+                    
+                    for (int i = 0; i < toDelete.length; i++){
+                        Statement state = connect(user,pass);
+                        ResultSet rs1 = state.executeQuery("select po_id from purchase_order, project where project.project_id=purchase_order.project_id and project_name=\""+rowall.get(i)+"\";");
+                        rs1.next();
+                        String tempid =  rs1.getString(1);
+                        state.close();
+                        String query = "DELETE FROM purchase_order WHERE po_id = \"" + tempid + "\";";
+                        execQuer1(user, pass, query);
+                    }
+                    JOptionPane.showMessageDialog(null, "The following purchase orders have been removed: " + rows, "Purchase Order Removed", JOptionPane.PLAIN_MESSAGE);
+                    //REFRESHING THE GUI
+                DefaultTableModel dtm8 = execQuer2(user, pass, "select project.project_name as PROJECT, \n"
+                        + "	purchase_order.date_issued as \"DATE ISSUED\", \n"
+                        + "	purchase_order.total_price as PRICE \n"
+                        + "	from project left join purchase_order \n"
+                        + "	on (project.project_id=purchase_order.project_id)\n"
+                        + "	order by project.project_id;");
+                POTable.setModel(dtm8);
+                }
+           } catch (MySQLSyntaxErrorException lel) {} catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
     }                                        
 
     private void ADDPOActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                      
@@ -3027,12 +3089,91 @@ public class JCarlSystem extends javax.swing.JFrame {
                     ResultSet rs1 = state.executeQuery("select project_id from project where project_name=\""+proj+"\";");
                     rs1.next();
                     int projid = rs1.getInt(1);
-
+                    try {
                     String query = "insert into purchase_order(project_id, name, date_issued, total_price) values (" + projid + ", "
                             + "\""+poName+"\", \""+date+"\", "+totp+");";
+                    execQuer1(user, pass, query); 
+                    JOptionPane.showMessageDialog(null, "New Purchase Order: " + poName + "  Date: " + date, "Purchase Order Added", JOptionPane.PLAIN_MESSAGE);
+                
+                    } catch (MySQLSyntaxErrorException lel) {
+                        JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    }
+                
+                //REFRESHING THE GUI
+                DefaultTableModel dtm8 = execQuer2(user, pass, "select project.project_name as PROJECT, \n"
+                        + "	purchase_order.date_issued as \"DATE ISSUED\", \n"
+                        + "	purchase_order.total_price as PRICE \n"
+                        + "	from project left join purchase_order \n"
+                        + "	on (project.project_id=purchase_order.project_id)\n"
+                        + "	order by project.project_id;");
+                POTable.setModel(dtm8);
+            } catch (MySQLSyntaxErrorException lel) {
+                JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }                                     
+
+    private void UPDATEPOActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                         
+        // TODO add your handling code here:
+        Statement stm = connect(user, pass);
+        ResultSet rs = stm.executeQuery("select project_name from project left join purchase_order on project.project_id=purchase_order.project_id where purchase_order.po_id is not NULL;");
+
+        ArrayList<String> projlist = new ArrayList<>();
+        while (rs.next()) {
+            projlist.add(rs.getString(1));
+        }
+        String[] projl = new String[projlist.size()];
+        projlist.toArray(projl);
+
+        final JComboBox<String> projl1 = new JComboBox<>(projl);
+
+        Object[] fields = {
+            "Choose project: ", projl1, //"Second Project", projl2,
+        };
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields,
+                "Load Projects", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+        if (n == JOptionPane.OK_OPTION) {
+
+            //tab or project 1
+            JTextField po_name = new JTextField();
+            JTextField dt = new JTextField();
+            JTextField tot = new JTextField();
+
+            //fix the fields that need to be in the pop-up window
+            Object[] f = {
+                "Name", po_name,
+                "Date", dt,
+                "Total Price", tot
+            };
+
+            Object[] op = {"Ok", "Cancel"};
+
+            int em = JOptionPane.showOptionDialog(null, f, "Add Purchase Order", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, op, op[0]);
+
+            try {
+                if (em == JOptionPane.OK_OPTION) {
+                    String poName = po_name.getText();
+                    String date = dt.getText();
+                    String proj = projl1.getSelectedItem().toString();
+                    String totp = tot.getText();
+                    
+                    Statement state = connect(user,pass);
+                    ResultSet rs1 = state.executeQuery("select project_id from project where project_name=\""+proj+"\";");
+                    rs1.next();
+                    int projid = rs1.getInt(1);
+
+                    String query = "update purchase_order set name=\""+poName+"\", date_issued=\""+date+"\", total_price="+totp+" where project_id="+projid+";";
+                    //String query = "insert into purchase_order(project_id, name, date_issued, total_price) values (" + projid + ", "
+                    //        + "\""+poName+"\", \""+date+"\", "+totp+");";
                     execQuer1(user, pass, query);
 
-                    JOptionPane.showMessageDialog(null, "New Purchase Order: " + poName + "  Date: " + date, "Purchase Order Added", JOptionPane.PLAIN_MESSAGE);
+                    //JOptionPane.showMessageDialog(null, "New Purchase Order: " + poName + "  Date: " + date, "Purchase Order Added", JOptionPane.PLAIN_MESSAGE);
                 }
                 
                 //REFRESHING THE GUI
@@ -3047,11 +3188,7 @@ public class JCarlSystem extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }                                     
-
-    private void UPDATEPOActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
+    }                                                             
 
     private void jScrollPane5MouseClicked(java.awt.event.MouseEvent evt) {                                          
         // TODO add your handling code here:
@@ -3090,10 +3227,10 @@ public class JCarlSystem extends javax.swing.JFrame {
         }   catch (SQLException ex) {
                 Logger.getLogger(JCarlSystem.class.getName()).log(Level.SEVERE, null, ex);
             } //REFRESHING THE GUI
-            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_id, material_name, material.quantity\n" +
-            "from material left join for_use\n" +
-            "on for_use.material_id=material.material_id\n" +
-            "where supplier_id=1;");
+            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material_id,material_name as MATERIALS, \n" +
+            "	quantity as QUANTITY, price as 'Price'\n" +
+            "	from material" +
+            "	where supplier_id=1;");
             WarehouseTable.setModel(dtm5);
     }                                            
 
@@ -3103,7 +3240,7 @@ public class JCarlSystem extends javax.swing.JFrame {
             String Table_click = (PayrollTable1.getModel().getValueAt(row,0).toString());
             String stringcon = "jdbc:mysql://localhost:3306/jcarl";//databaseName=travel;user=root;password=root
             Connection con = DriverManager.getConnection(stringcon,"root","root");
-            String sql = "select * from(select employee.employee_id as ID, employee_name as NAME, rate as RATE,\n" +
+            String sql = "select * from(select employee_name as NAME, rate as RATE,\n" +
         "ifnull(mon, 0) as MONDAY, \n" +
         "ifnull(tues, 0) as TUESDAY, \n" +
         "ifnull(wed,0) as WEDNESDAY, \n" +
@@ -3115,7 +3252,7 @@ public class JCarlSystem extends javax.swing.JFrame {
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
         "where payroll.project_id="+proj1+"\n" +
-        "group by employee.employee_id)t where t.ID='"+Table_click+"'";
+        "group by employee.employee_id)t where t.NAME='"+Table_click+"'";
             Statement pst= con.prepareStatement(sql);   
             ResultSet rr = pst.executeQuery(sql);
             if(rr.next()){
