@@ -1243,7 +1243,17 @@ public class NewJFrame extends javax.swing.JFrame {
         ADDPO.setText("Add ");
         ADDPO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ADDPOActionPerformed(evt);
+                try {
+                    ADDPOActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -2671,8 +2681,77 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
         // TODO add your handling code here:
     }                                        
 
-    private void ADDPOActionPerformed(java.awt.event.ActionEvent evt) {                                      
-        // TODO add your handling code here:
+    private void ADDPOActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                      
+        Statement stm = connect(user, pass);
+        ResultSet rs = stm.executeQuery("select project_name from project left join purchase_order on project.project_id=purchase_order.project_id where purchase_order.po_id is NULL;");
+
+        ArrayList<String> projlist = new ArrayList<>();
+        while (rs.next()) {
+            projlist.add(rs.getString(1));
+        }
+        String[] projl = new String[projlist.size()];
+        projlist.toArray(projl);
+
+        final JComboBox<String> projl1 = new JComboBox<>(projl);
+
+        Object[] fields = {
+            "Choose project: ", projl1, //"Second Project", projl2,
+        };
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields,
+                "Load Projects", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+        if (n == JOptionPane.OK_OPTION) {
+
+            //tab or project 1
+            JTextField po_name = new JTextField();
+            JTextField dt = new JTextField();
+            JTextField tot = new JTextField();
+
+            //fix the fields that need to be in the pop-up window
+            Object[] f = {
+                "Name", po_name,
+                "Date", dt,
+                "Total Price", tot
+            };
+
+            Object[] op = {"Ok", "Cancel"};
+
+            int em = JOptionPane.showOptionDialog(null, f, "Add Purchase Order", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, op, op[0]);
+
+            try {
+                if (em == JOptionPane.OK_OPTION) {
+                    String poName = po_name.getText();
+                    String date = dt.getText();
+                    String proj = projl1.getSelectedItem().toString();
+                    String totp = tot.getText();
+                    
+                    Statement state = connect(user,pass);
+                    ResultSet rs1 = state.executeQuery("select project_id from project where project_name=\""+proj+"\";");
+                    rs1.next();
+                    int projid = rs1.getInt(1);
+
+                    String query = "insert into purchase_order(project_id, name, date_issued, total_price) values (" + projid + ", "
+                            + "\""+poName+"\", \""+date+"\", "+totp+");";
+                    execQuer1(user, pass, query);
+
+                    JOptionPane.showMessageDialog(null, "New Purchase Order: " + poName + "  Date: " + date, "Purchase Order Added", JOptionPane.PLAIN_MESSAGE);
+                }
+                
+                //REFRESHING THE GUI
+                DefaultTableModel dtm8 = execQuer2(user, pass, "select project.project_name as PROJECT, \n"
+                        + "	purchase_order.date_issued as \"DATE ISSUED\", \n"
+                        + "	purchase_order.total_price as PRICE \n"
+                        + "	from project left join purchase_order \n"
+                        + "	on (project.project_id=purchase_order.project_id)\n"
+                        + "	order by project.project_id;");
+                POTable.setModel(dtm8);;
+            } catch (MySQLSyntaxErrorException lel) {
+                JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }                                     
 
     private void UPDATEPOActionPerformed(java.awt.event.ActionEvent evt) {                                         
