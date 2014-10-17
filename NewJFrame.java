@@ -1135,11 +1135,31 @@ public class NewJFrame extends javax.swing.JFrame {
         UpdateInventory.setText("Update Inventory");
         UpdateInventory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UpdateInventoryActionPerformed(evt);
+                try {
+                    UpdateInventoryActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
         AddWarehouse.setText("Add Item");
+        AddWarehouse.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    AddWarehouseActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         RemoveWarehouse.setText("Remove Item");
         RemoveWarehouse.addActionListener(new java.awt.event.ActionListener() {
@@ -2176,16 +2196,102 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
     private void AddtoEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
         // this is the Add Employee button in the Employees tab
-        System.out.println("hire employee!");
+        JTextField e_name = new JTextField();
+        JTextField rt = new JTextField();
+
+        //fix the fields that need to be in the pop-up window
+        Object[] fields = {
+            "Employee Name", e_name,
+            "Rate", rt,};
+
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields, "Add Employee", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        try {
+            if (n == JOptionPane.OK_OPTION) {
+                String employeeName = e_name.getText();
+                String rate = rt.getText();
+
+                String query = "insert into employee(employee_name, rate) values" + "(\"" + employeeName + "\", " + rate + ");";
+                execQuer1(user, pass, query);
+
+                JOptionPane.showMessageDialog(null, "New employee: " + employeeName + "  Rate: " + rate, "Employee Added", JOptionPane.PLAIN_MESSAGE);
+            }
+            //REFRESHING THE GUI
+            DefaultTableModel dtm2 = execQuer2(user, pass, "select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ',') as PROJECT \n"
+                    + "from employee left join payroll on employee.employee_id = payroll.employee_id\n"
+                    + "left join project on project.project_id = payroll.project_id\n"
+                    + "group by employee_name\n"
+                    + "order by employee.employee_id asc;");
+            //select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;
+            EmployeesTable.setModel(dtm2);
+        } catch (MySQLSyntaxErrorException lel) {
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }   catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }                                             
 
     private void RemoveToEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // Employees Tab
-        System.out.println("pink slip");
+        JTextField e_name = new JTextField();
+
+        //fix the fields that need to be in the pop-up window
+        Object[] fields = {
+            "Employee Name", e_name
+        };
+
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields, "Delete who?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        try {
+            if (n == JOptionPane.OK_OPTION) {
+                String employeeName = e_name.getText();
+
+                String query = "DELETE FROM employee WHERE employee_name='" + employeeName + "';";
+                execQuer1(user, pass, query);
+
+                JOptionPane.showMessageDialog(null, "Employee deleted. How sad...", "Bye-bye Employee", JOptionPane.PLAIN_MESSAGE);
+            }
+            //REFRESHING THE GUI
+            DefaultTableModel dtm2 = execQuer2(user, pass, "select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;");
+            //select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;
+            EmployeesTable.setModel(dtm2);
+        } catch (MySQLSyntaxErrorException lel) {
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }   catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }                                                
 
-    private void UpdateInventoryActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+    private void UpdateInventoryActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {     
+                // TODO add your handling code here:
+        Statement state = connect(user,pass);
+        String quer ="select distinct material.material_name as MATERIALS, \n" +
+            "	material.quantity as QUANTITY\n" +
+            "	from supplier, material, for_use, project\n" +
+            "	where (material.material_id = for_use.material_id)\n" +
+            "	and (project.project_id = for_use.project_id)\n" +
+            "	and material.supplier_id = 1;";
+        ResultSet set = state.executeQuery(quer);
+        
+                DefaultTableModel dtm5 = getTable(set);
+            WarehouseTable.setModel(dtm5);
+        
     }                                               
 
     private void Week1ButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -2529,7 +2635,20 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
     }                                                  
 
     private void Update_employeeActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+            try {
+                // TODO add your handling code here:
+                DefaultTableModel dtm2 = execQuer2(user, pass, "select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;");
+                //select employee.employee_name as EMPLOYEE, GROUP_CONCAT(distinct project.project_name order by project.project_id asc separator ', ') as PROJECT from employee left join payroll on employee.employee_id = payroll.employee_id left join project on project.project_id = payroll.project_id group by employee_name order by employee.employee_id asc;
+                EmployeesTable.setModel(dtm2);
+            } catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }                                               
 
     private void EmployeesTableMouseClicked(java.awt.event.MouseEvent evt) {                                            
@@ -2564,8 +2683,46 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
         // TODO add your handling code here:
     }                                         
 
-    private void AddWarehouseActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void AddWarehouseActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
         // TODO add your handling code here:
+        JTextField material = new JTextField();
+        JTextField quant = new JTextField();
+        JTextField price = new JTextField();
+
+        //fix the fields that need to be in the pop-up window
+        Object[] fields = {
+            "Material Name", material,
+            "Quantity", quant, "Price", price
+        };
+
+        Object[] options = {"Ok", "Cancel"};
+
+        int n = JOptionPane.showOptionDialog(null, fields, "Add New Item to Warehouse", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        try {
+            if (n == JOptionPane.OK_OPTION) {
+                String matnam = material.getText();
+                String qty = quant.getText();
+                String prc = price.getText();
+
+                String query = "insert into material(supplier_id, material_name, quantity, price) values" + "(1, \"" +matnam+ "\", "+qty + ", "+prc +");";
+                execQuer1(user, pass, query);
+
+                JOptionPane.showMessageDialog(null, "New material: " + matnam + "\nQuantity: " + qty +"\nPrice: "+prc, "Material Added to Warehouse", JOptionPane.PLAIN_MESSAGE);
+            }
+            
+        } catch (MySQLSyntaxErrorException lel) {
+            JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }   catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } //REFRESHING THE GUI
+            DefaultTableModel dtm5 = execQuer2(user,pass,"select distinct material.material_name as MATERIALS, \n" +
+            "	material.quantity as QUANTITY\n" +
+            "	from supplier, material, for_use, project\n" +
+            "	where (material.material_id = for_use.material_id)\n" +
+            "	and (project.project_id = for_use.project_id)\n" +
+            "	and material.supplier_id = 1;");
+            WarehouseTable.setModel(dtm5);
     }                                            
 
     private void PayrollTable1MouseClicked(java.awt.event.MouseEvent evt) {                                           
