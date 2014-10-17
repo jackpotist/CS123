@@ -315,7 +315,11 @@ public class NewJFrame extends javax.swing.JFrame {
         RemoveEmployee1.setText("Remove Employee");
         RemoveEmployee1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveEmployee1ActionPerformed(evt);
+                try {
+                    RemoveEmployee1ActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -2116,9 +2120,57 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
           }
     }                                            
 
-    private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    private void RemoveEmployee1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {                                                
         // Project 1
-        System.out.println("in 1");
+        //System.out.println("in 1");
+        
+        if (PayrollTable1.getSelectedRow() == -1){
+           JOptionPane.showMessageDialog(null, "Please select employee to remove from payroll", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
+       else{
+           int[] toDelete = PayrollTable1.getSelectedRows();
+           String rows = new String();
+           ArrayList<String> rowall = new ArrayList<>();
+           
+           for (int i = 0; i < toDelete.length; i++){
+               rows += "" + PayrollTable1.getValueAt(toDelete[i], 0).toString();
+               if (i < toDelete.length-1)
+                    rows += ", ";
+               if (i == toDelete.length)
+                    rows += "?";
+               rowall.add(PayrollTable1.getValueAt(toDelete[i], 0).toString());
+           }
+           Object question = "Are you sure you want to remove the following employees: " + rows + "?";
+           Object[] options = {"Yes", "No"};
+           
+           int n = JOptionPane.showOptionDialog(null, question, "Remove Employees from Project", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+           try{
+                if (n == JOptionPane.OK_OPTION){
+                    
+                    for (int i = 0; i < toDelete.length; i++){
+                        Statement state = connect(user,pass);
+                        ResultSet rs1 = state.executeQuery("select employee_id from employee where employee_name=\""+rowall.get(i)+"\";");
+                        rs1.next();
+                        String tempid =  rs1.getObject(1).toString();
+                        state.close();
+                        String query = "DELETE FROM payroll WHERE employee_id = \"" + tempid + "\";";
+                        execQuer1(user, pass, query);
+                    }
+                    JOptionPane.showMessageDialog(null, "The following employees have been removed from payroll: " + rows, "Employees Removed", JOptionPane.PLAIN_MESSAGE);
+                //DELETE NECESSARY ROWS 
+                    /*
+                for (int i = 0; i < toDelete.length; i++)
+                   ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);*/
+                initTab1(proj1);
+                }
+           } catch (MySQLSyntaxErrorException lel) {} catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
     }                                               
 
     private void AddtoEmployeeActionPerformed(java.awt.event.ActionEvent evt) {                                              
@@ -2146,7 +2198,57 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
 
     private void RemoveEmployee2ActionPerformed(java.awt.event.ActionEvent evt) {                                                
         //project 2 tab
-        System.out.println("in 2");
+        //System.out.println("in 2");
+        if (PayrollTable2.getSelectedRow() == -1){
+           JOptionPane.showMessageDialog(null, "Please select employee to remove from payroll", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
+       else{
+           int[] toDelete = PayrollTable2.getSelectedRows();
+           String rows = new String();
+           ArrayList<String> rowall = new ArrayList<>();
+           
+           for (int i = 0; i < toDelete.length; i++){
+               rows += "" + PayrollTable2.getValueAt(toDelete[i], 0).toString();
+               if (i < toDelete.length-1)
+                    rows += ", ";
+               if (i == toDelete.length)
+                    rows += "?";
+               rowall.add(PayrollTable2.getValueAt(toDelete[i], 0).toString());
+           }
+           Object question = "Are you sure you want to remove the following employees: " + rows + "?";
+           Object[] options = {"Yes", "No"};
+           
+           int n = JOptionPane.showOptionDialog(null, question, "Remove Employees from Project", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+           try{
+                if (n == JOptionPane.OK_OPTION){
+                    
+                    for (int i = 0; i < toDelete.length; i++){
+                        Statement state = connect(user,pass);
+                        ResultSet rs1 = state.executeQuery("select employee_id from employee where employee_name=\""+rowall.get(i)+"\";");
+                        rs1.next();
+                        String tempid =  rs1.getObject(1).toString();
+                        state.close();
+                        String query = "DELETE FROM payroll WHERE employee_id = \"" + tempid + "\";";
+                        execQuer1(user, pass, query);
+                    }
+                    JOptionPane.showMessageDialog(null, "The following employees have been removed from payroll: " + rows, "Employees Removed", JOptionPane.PLAIN_MESSAGE);
+                //DELETE NECESSARY ROWS 
+                    /*
+                for (int i = 0; i < toDelete.length; i++)
+                   ((DefaultTableModel)MaterialTable1.getModel()).removeRow(toDelete[i]);*/
+                initTab2(proj2);
+                }
+           } catch (MySQLSyntaxErrorException lel) {} catch (InstantiationException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
+        
     }                                               
 
     private void AddEmployee1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {                                             
@@ -2353,7 +2455,6 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
 
                 String startd = y1+"-"+mon1+"-"+d1;
                 String endd = y2+"-"+mon2+"-"+d2;
-                System.out.println(projname+" "+startd+" "+endd+" "+client);
 
                 String query2 = "insert into project(project_name, start_date, end_date, client) "
                         + "values (\""+projname+"\", \""+startd+"\", \""+endd+"\", \"" +client+ "\");";
