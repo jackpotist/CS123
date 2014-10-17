@@ -1613,12 +1613,18 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void initTab1(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        Tab1.setTitleAt(0, proj);
+        Statement state = connect(user,pass);
+        ResultSet rs1 = state.executeQuery("select project_name from project where project_id=\""+proj1+"\";");
+        rs1.next();
+        String tproj =  rs1.getObject(1).toString();
+        state.close();
+        Tab1.setTitleAt(0, tproj);
         
+        /*
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
-        int projid = rs.getInt(1);
+        int projid = rs.getInt(1);*/
         
         DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
         "ifnull(mon, 8) as MONDAY, \n" +
@@ -1631,7 +1637,7 @@ public class NewJFrame extends javax.swing.JFrame {
         "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
-        "where payroll.project_id="+projid+"\n" +
+        "where payroll.project_id="+proj1+"\n" +
         "group by employee.employee_id;");
         PayrollTable1.setModel(dtm);
 
@@ -1640,17 +1646,23 @@ public class NewJFrame extends javax.swing.JFrame {
 "	from project, material, for_use\n" +
 "	where (project.project_id = for_use.project_id)\n" +
 "	and (material.material_id = for_use.material_id)\n" +
-"	and project.project_id ="+projid+";");
+"	and project.project_id ="+proj1+";");
         MaterialTable1.setModel(dtm2);
     }
     
     private void initTab2(String proj) throws SQLException, InstantiationException, ClassNotFoundException, IllegalAccessException {
-        Tab1.setTitleAt(1, proj);
+        Statement state = connect(user,pass);
+        ResultSet rs1 = state.executeQuery("select project_name from project where project_id=\""+proj2+"\";");
+        rs1.next();
+        String tproj =  rs1.getObject(1).toString();
+        state.close();
+        Tab1.setTitleAt(1, tproj);
         
+        /*
         Statement stm = connect(user,pass);
         ResultSet rs = stm.executeQuery("select project_id from project where project_name=\""+proj+"\"");
         rs.next();
-        int projid = rs.getInt(1);
+        int projid = rs.getInt(1);*/
         
         DefaultTableModel dtm = execQuer2(user,pass, "select employee_name, rate,\n" +
         "ifnull(mon, 8) as MONDAY, \n" +
@@ -1663,7 +1675,7 @@ public class NewJFrame extends javax.swing.JFrame {
         "ifnull((sum(mon+tues+wed+thurs+fri)*rate),8*rate) as 'Total Hours'\n" +
         "from payroll left join employee\n" +
         "on employee.employee_id = payroll.employee_id\n" +
-        "where payroll.project_id="+projid+"\n" +
+        "where payroll.project_id="+proj2+"\n" +
         "group by employee.employee_id;");
         PayrollTable2.setModel(dtm);
 
@@ -1672,7 +1684,7 @@ public class NewJFrame extends javax.swing.JFrame {
 "	from project, material, for_use\n" +
 "	where (project.project_id = for_use.project_id)\n" +
 "	and (material.material_id = for_use.material_id)\n" +
-"	and project.project_id ="+projid+";");
+"	and project.project_id ="+proj2+";");
         ItemTable2.setModel(dtm2);
     }
 
@@ -1701,8 +1713,18 @@ public class NewJFrame extends javax.swing.JFrame {
               JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
       
       if (n == JOptionPane.OK_OPTION){
-          proj1 = (String) projl1.getSelectedItem();
-          proj2 = (String) projl2.getSelectedItem();
+          String tempproj1 = (String) projl1.getSelectedItem();
+          String tempproj2 = (String) projl2.getSelectedItem();
+          
+          Statement state = connect(user,pass);
+          ResultSet rs1 = state.executeQuery("select project_id from project where project_name=\""+tempproj1+"\";");
+                rs1.next();
+                proj1 =  rs1.getObject(1).toString();
+                
+          ResultSet rs2 = state.executeQuery("select project_id from project where project_name=\""+tempproj2+"\";");
+                rs2.next();
+                proj2 =  rs2.getObject(1).toString();
+          state.close();
           
             try {
                 initTab1(proj1);
@@ -1808,18 +1830,18 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+materialName+"\";");
                 rs2.next();
                 int nmatid = rs2.getInt(1);
-                
+                /*
                 ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
                 rs3.next();
-                int projid = rs3.getInt(1);
+                int projid = rs3.getInt(1); */
                 
-                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+proj1+", "+nmatid+", "+quantity+");";
                 execQuer1(user, pass, query2);
                 state.close();
                 //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
                 initTab1(proj1);
                 
-                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj1+": " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+                JOptionPane.showMessageDialog( null, "New item in inventory for project: " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
             } } catch (MySQLSyntaxErrorException lel){
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
             
@@ -1865,18 +1887,18 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+selmat+"\";");
                 rs2.next();
                 int nmatid = rs2.getInt(1);
-                
+                /*
                 ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
                 rs3.next();
-                int projid = rs3.getInt(1);
+                int projid = rs3.getInt(1); */
                 
-                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+proj1+", "+nmatid+", "+quantity+");";
                 execQuer1(user, pass, query2);
                 state.close();
                 //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
                 initTab1(proj1);
                 
-                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj1+": " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+                JOptionPane.showMessageDialog( null, "New item in inventory for project: " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
             } } catch (MySQLSyntaxErrorException lel){
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
             
@@ -1974,18 +1996,18 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+materialName+"\";");
                 rs2.next();
                 int nmatid = rs2.getInt(1);
-                
+                /*
                 ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
                 rs3.next();
-                int projid = rs3.getInt(1);
+                int projid = rs3.getInt(1); */
                 
-                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+proj2+", "+nmatid+", "+quantity+");";
                 execQuer1(user, pass, query2);
                 state.close();
                 //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
                 initTab2(proj2);
                 
-                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj2+": " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+                JOptionPane.showMessageDialog( null, "New item in inventory for project: " +  quantity + " " + materialName + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
             } } catch (MySQLSyntaxErrorException lel){
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
             
@@ -2031,18 +2053,18 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
                 ResultSet rs2 = state.executeQuery("select material_id from material where material_name=\""+selmat+"\";");
                 rs2.next();
                 int nmatid = rs2.getInt(1);
-                
+                /*
                 ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
                 rs3.next();
-                int projid = rs3.getInt(1);
+                int projn = rs3.getInt(1); */
                 
-                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+projid+", "+nmatid+", "+quantity+");";
+                String query2 = "insert into for_use(project_id, material_id, quantity) values ("+proj2+", "+nmatid+", "+quantity+");";
                 execQuer1(user, pass, query2);
                 state.close();
                 //REFRESH THE GUI BY REDRAWING THE WHOLE TAB
                 initTab2(proj2);
                 
-                JOptionPane.showMessageDialog( null, "New item in inventory for "+proj2+": " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
+                JOptionPane.showMessageDialog( null, "New item in inventory for project: " +  quantity + " " + selmat + " that costs " + price + ".", "Your Results", JOptionPane.PLAIN_MESSAGE); 
             } } catch (MySQLSyntaxErrorException lel){
             JOptionPane.showMessageDialog(null, "Please check your entries again.", "Error!", JOptionPane.ERROR_MESSAGE); }
             
@@ -2079,12 +2101,12 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
             ResultSet rs2 = state.executeQuery("select employee_id from employee where employee_name=\""+selemp+"\";");
             rs2.next();
             int empid = rs2.getInt(1);
-
+/*
             ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj2+"\";");
             rs3.next();
-            int projid = rs3.getInt(1);
+            int projid = rs3.getInt(1); */
 
-            String query2 = "insert into payroll(project_id, employee_id) values ("+projid+", "+empid+");";
+            String query2 = "insert into payroll(project_id, employee_id) values ("+proj2+", "+empid+");";
             execQuer1(user, pass, query2);
             state.close();
 
@@ -2157,12 +2179,12 @@ private void RemoveMaterial1ActionPerformed(java.awt.event.ActionEvent evt) thro
             ResultSet rs2 = state.executeQuery("select employee_id from employee where employee_name=\""+selemp+"\";");
             rs2.next();
             int empid = rs2.getInt(1);
-
+/*
             ResultSet rs3 = state.executeQuery("select project_id from project where project_name=\""+proj1+"\";");
             rs3.next();
             int projid = rs3.getInt(1);
-
-            String query2 = "insert into payroll(project_id, employee_id) values ("+projid+", "+empid+");";
+*/
+            String query2 = "insert into payroll(project_id, employee_id) values ("+proj1+", "+empid+");";
             execQuer1(user, pass, query2);
             state.close();
 
